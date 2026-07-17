@@ -63,6 +63,7 @@ function About() {
                   <img
                     src={f.photoPath}
                     alt={f.name}
+                    loading="lazy"
                     className="h-16 w-16 rounded-full object-cover"
                   />
                 ) : (

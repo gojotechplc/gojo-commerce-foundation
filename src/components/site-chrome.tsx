@@ -44,7 +44,7 @@ export function SiteHeader({ chrome }: { chrome: SiteChromeData }) {
                 aria-hidden
                 className="grid h-8 w-8 place-items-center rounded-sm bg-primary text-primary-foreground font-display text-lg leading-none shrink-0"
               >
-                G
+                {(company.shortName || company.name).slice(0, 1).toUpperCase()}
               </span>
               <span className="font-display text-base sm:text-lg tracking-tight truncate">
                 {company.shortName}
@@ -84,6 +84,7 @@ export function SiteHeader({ chrome }: { chrome: SiteChromeData }) {
             className="lg:hidden inline-flex h-10 w-10 items-center justify-center rounded-sm border border-border text-foreground hover:bg-muted"
             aria-label={menuOpen ? "Close menu" : "Open menu"}
             aria-expanded={menuOpen}
+            aria-controls="mobile-menu"
             onClick={() => setMenuOpen((v) => !v)}
           >
             {menuOpen ? (
@@ -116,6 +117,7 @@ export function SiteHeader({ chrome }: { chrome: SiteChromeData }) {
           onClick={() => setMenuOpen(false)}
         />
         <nav
+          id="mobile-menu"
           className={`absolute top-0 inset-x-0 border-b border-border bg-background shadow-lg transition-transform duration-200 ${
             menuOpen ? "translate-y-0" : "-translate-y-3 opacity-0 pointer-events-none"
           }`}
@@ -207,7 +209,7 @@ export function SiteFooter({ chrome }: { chrome: SiteChromeData }) {
       </div>
       <div className="border-t border-primary-foreground/15">
         <div className="container-page py-4 sm:py-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 text-xs text-primary-foreground/60">
-          <div>
+          <div suppressHydrationWarning>
             © {new Date().getFullYear()} {company.name}. All rights reserved.
           </div>
           <div>Addis Ababa · Ethiopia</div>
@@ -227,7 +229,7 @@ export function PageShell({
   return (
     <div className="min-h-dvh flex flex-col overflow-x-hidden">
       <SiteHeader chrome={chrome} />
-      <main className="flex-1 min-w-0">{children}</main>
+      <main className="flex-1 min-w-0 motion-safe:animate-[page-in_0.22s_ease-out]">{children}</main>
       <SiteFooter chrome={chrome} />
     </div>
   );

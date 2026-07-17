@@ -199,7 +199,8 @@ function Home() {
         </div>
       </section>
 
-      <section className="border-y border-border/60 bg-primary text-primary-foreground">
+
+<section className="border-y border-border/60 bg-primary text-primary-foreground">
         <div className="container-page py-10 md:py-14 flex flex-col md:flex-row md:items-baseline md:justify-between gap-4">
           <div className="font-display text-2xl md:text-4xl leading-tight max-w-3xl">
             {(tagline?.heading ?? "Identify the problem. Build the solution. Execute now.")

@@ -49,7 +49,7 @@ function WhatWeDo() {
             <article
               key={c.slug}
               id={c.slug}
-              className="grid gap-8 md:grid-cols-[1fr_1.4fr] scroll-mt-24"
+              className="grid gap-8 md:grid-cols-[1fr_1.4fr] scroll-mt-header"
             >
               <div>
                 <div className="eyebrow text-accent-foreground/70">

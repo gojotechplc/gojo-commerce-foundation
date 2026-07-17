@@ -4,6 +4,7 @@ import {
   Link,
   createRootRouteWithContext,
   useRouter,
+  useRouterState,
   HeadContent,
   Scripts,
 } from "@tanstack/react-router";
@@ -140,11 +141,25 @@ function RootShell({ children }: { children: ReactNode }) {
   );
 }
 
+function NavProgressBar() {
+  const isLoading = useRouterState({ select: (s) => s.status === "pending" });
+  return (
+    <div
+      aria-hidden
+      className={`fixed top-0 left-0 right-0 z-[200] h-[2px] bg-accent origin-left transition-all duration-300 ${
+        isLoading ? "opacity-100 scale-x-[0.7]" : "opacity-0 scale-x-100"
+      }`}
+      style={{ transitionTimingFunction: isLoading ? "linear" : "ease-out" }}
+    />
+  );
+}
+
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
 
   return (
     <QueryClientProvider client={queryClient}>
+      <NavProgressBar />
       <Outlet />
     </QueryClientProvider>
   );

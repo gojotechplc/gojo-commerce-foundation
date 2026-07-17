@@ -51,7 +51,7 @@ function Partnerships() {
         ) : (
           <div
             aria-hidden
-            className="aspect-[4/5] rounded-md bg-gradient-to-br from-primary via-forest to-primary/80 hidden md:block"
+            className="aspect-[4/5] rounded-md bg-gradient-to-br from-primary via-forest to-primary/80"
           />
         )}
       </section>
@@ -122,7 +122,8 @@ function Partnerships() {
                   <img
                     src={p.logoPath}
                     alt=""
-                    className="max-h-10 max-w-[180px] object-contain"
+                    loading="lazy"
+                    className="max-h-10 max-w-[180px] w-auto object-contain"
                   />
                 </div>
               )}

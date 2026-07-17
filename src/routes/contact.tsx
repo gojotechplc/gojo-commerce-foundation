@@ -64,6 +64,27 @@ function Contact() {
   });
   const [status, setStatus] = useState<"idle" | "saving" | "ok" | "err">("idle");
   const [error, setError] = useState<string | null>(null);
+  const [touched, setTouched] = useState<Record<string, boolean>>({});
+
+  const fieldErrors: Record<string, string> = {
+    name: touched.name && !form.name.trim() ? "Name is required" : "",
+    email: touched.email
+      ? !form.email
+        ? "Email is required"
+        : !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)
+          ? "Enter a valid email address"
+          : ""
+      : "",
+    phone:
+      touched.phone && form.phone && !/^\+?[\d\s\-(). ]{7,20}$/.test(form.phone)
+        ? "Use format: +251 91 234 5678"
+        : "",
+    message: touched.message && !form.message.trim() ? "Message is required" : "",
+  };
+
+  function touch(field: string) {
+    setTouched((t) => ({ ...t, [field]: true }));
+  }
 
   return (
     <PageShell chrome={chrome}>
@@ -142,6 +163,7 @@ function Contact() {
                 },
               });
               setStatus("ok");
+              setTouched({});
               setForm({
                 name: "",
                 email: "",
@@ -162,41 +184,49 @@ function Contact() {
             </p>
           )}
           <div className="grid gap-5 sm:grid-cols-2">
-            <Field label="Your name" required>
+            <Field label="Your name" required error={fieldErrors.name}>
               <input
                 required
+                aria-required="true"
+                aria-invalid={!!fieldErrors.name || undefined}
                 type="text"
                 maxLength={CONTACT_LIMITS.name}
                 value={form.name}
                 onChange={(e) => setForm({ ...form, name: e.target.value })}
-                className={inputCls}
+                onBlur={() => touch("name")}
+                className={fieldErrors.name ? inputClsError : inputCls}
                 autoComplete="name"
               />
             </Field>
-            <Field label="Email" required>
+            <Field label="Email" required error={fieldErrors.email}>
               <input
                 required
+                aria-required="true"
+                aria-invalid={!!fieldErrors.email || undefined}
                 type="email"
                 maxLength={CONTACT_LIMITS.email}
                 value={form.email}
                 onChange={(e) => setForm({ ...form, email: e.target.value })}
-                className={inputCls}
+                onBlur={() => touch("email")}
+                className={fieldErrors.email ? inputClsError : inputCls}
                 autoComplete="email"
                 inputMode="email"
               />
             </Field>
           </div>
           <div className="grid gap-5 sm:grid-cols-2">
-            <Field label="Phone (optional)">
+            <Field label="Phone (optional)" error={fieldErrors.phone}>
               <input
                 type="tel"
                 maxLength={CONTACT_LIMITS.phone}
                 value={form.phone}
                 onChange={(e) => setForm({ ...form, phone: e.target.value })}
-                className={inputCls}
+                onBlur={() => touch("phone")}
+                aria-invalid={!!fieldErrors.phone || undefined}
+                className={fieldErrors.phone ? inputClsError : inputCls}
                 autoComplete="tel"
                 inputMode="tel"
-                placeholder="+251…"
+                placeholder="+251 91 234 5678"
               />
             </Field>
             <Field label="Organization">
@@ -223,14 +253,17 @@ function Contact() {
               ))}
             </select>
           </Field>
-          <Field label="Message" required>
+          <Field label="Message" required error={fieldErrors.message}>
             <textarea
               required
+              aria-required="true"
+              aria-invalid={!!fieldErrors.message || undefined}
               rows={5}
               maxLength={CONTACT_LIMITS.message}
               value={form.message}
               onChange={(e) => setForm({ ...form, message: e.target.value })}
-              className={inputCls}
+              onBlur={() => touch("message")}
+              className={fieldErrors.message ? inputClsError : inputCls}
             />
             <div className="mt-1 text-[11px] text-muted-foreground text-right">
               {form.message.length}/{CONTACT_LIMITS.message}
@@ -264,22 +297,37 @@ function Contact() {
 const inputCls =
   "w-full rounded-sm border border-input bg-background px-3 py-2.5 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary";
 
+const inputClsError =
+  "w-full rounded-sm border border-destructive bg-background px-3 py-2.5 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-destructive/30 focus:border-destructive";
+
 function Field({
   label,
   required,
+  error,
   children,
 }: {
   label: string;
   required?: boolean;
+  error?: string;
   children: React.ReactNode;
 }) {
   return (
     <label className="block">
       <span className="text-xs font-medium text-foreground">
         {label}
-        {required && <span className="text-accent"> *</span>}
+        {required && (
+          <>
+            <span className="text-accent" aria-hidden> *</span>
+            <span className="sr-only"> (required)</span>
+          </>
+        )}
       </span>
       <div className="mt-1.5">{children}</div>
+      {error && (
+        <p className="mt-1 text-xs text-destructive" role="alert">
+          {error}
+        </p>
+      )}
     </label>
   );
 }
