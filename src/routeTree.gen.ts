@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as WhatWeDoRouteImport } from './routes/what-we-do'
 import { Route as PartnershipsRouteImport } from './routes/partnerships'
 import { Route as GojoShopRouteImport } from './routes/gojo-shop'
+import { Route as ContactRouteImport } from './routes/contact'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
 
@@ -30,6 +31,11 @@ const GojoShopRoute = GojoShopRouteImport.update({
   path: '/gojo-shop',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ContactRoute = ContactRouteImport.update({
+  id: '/contact',
+  path: '/contact',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AboutRoute = AboutRouteImport.update({
   id: '/about',
   path: '/about',
@@ -44,6 +50,7 @@ const IndexRoute = IndexRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/contact': typeof ContactRoute
   '/gojo-shop': typeof GojoShopRoute
   '/partnerships': typeof PartnershipsRoute
   '/what-we-do': typeof WhatWeDoRoute
@@ -51,6 +58,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/contact': typeof ContactRoute
   '/gojo-shop': typeof GojoShopRoute
   '/partnerships': typeof PartnershipsRoute
   '/what-we-do': typeof WhatWeDoRoute
@@ -59,19 +67,33 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/contact': typeof ContactRoute
   '/gojo-shop': typeof GojoShopRoute
   '/partnerships': typeof PartnershipsRoute
   '/what-we-do': typeof WhatWeDoRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/about' | '/gojo-shop' | '/partnerships' | '/what-we-do'
+  fullPaths:
+    | '/'
+    | '/about'
+    | '/contact'
+    | '/gojo-shop'
+    | '/partnerships'
+    | '/what-we-do'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/about' | '/gojo-shop' | '/partnerships' | '/what-we-do'
+  to:
+    | '/'
+    | '/about'
+    | '/contact'
+    | '/gojo-shop'
+    | '/partnerships'
+    | '/what-we-do'
   id:
     | '__root__'
     | '/'
     | '/about'
+    | '/contact'
     | '/gojo-shop'
     | '/partnerships'
     | '/what-we-do'
@@ -80,6 +102,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
+  ContactRoute: typeof ContactRoute
   GojoShopRoute: typeof GojoShopRoute
   PartnershipsRoute: typeof PartnershipsRoute
   WhatWeDoRoute: typeof WhatWeDoRoute
@@ -108,6 +131,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof GojoShopRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/contact': {
+      id: '/contact'
+      path: '/contact'
+      fullPath: '/contact'
+      preLoaderRoute: typeof ContactRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/about': {
       id: '/about'
       path: '/about'
@@ -128,6 +158,7 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
+  ContactRoute: ContactRoute,
   GojoShopRoute: GojoShopRoute,
   PartnershipsRoute: PartnershipsRoute,
   WhatWeDoRoute: WhatWeDoRoute,
