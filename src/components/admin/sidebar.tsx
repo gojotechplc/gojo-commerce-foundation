@@ -47,12 +47,13 @@ export function AdminSidebar() {
   }, [pathname]);
 
   return (
-    <aside className="w-56 shrink-0 border-r border-border bg-secondary/40 min-h-screen flex flex-col">
-      <div className="px-4 py-5 border-b border-border">
+    <aside className="sticky top-0 h-screen w-56 shrink-0 border-r border-border bg-secondary/40 flex flex-col">
+      <div className="shrink-0 px-4 py-5 border-b border-border">
         <div className="font-display text-lg">Gojo Admin</div>
         <div className="text-xs text-muted-foreground mt-0.5">Content CMS</div>
       </div>
-      <nav className="flex-1 overflow-y-auto py-3 px-2 space-y-0.5">
+
+      <nav className="flex-1 min-h-0 overflow-y-auto py-3 px-2 space-y-0.5">
         {links.map((l) => {
           const active = l.exact
             ? pathname === l.to
@@ -84,18 +85,19 @@ export function AdminSidebar() {
           );
         })}
       </nav>
-      <div className="p-3 border-t border-border space-y-2">
+
+      <div className="shrink-0 p-3 border-t border-border bg-secondary/40 space-y-1">
         <a
           href="/"
           target="_blank"
           rel="noreferrer"
-          className="block text-sm text-primary hover:underline px-2"
+          className="block rounded-sm px-3 py-2 text-sm text-primary hover:bg-muted"
         >
           View site ↗
         </a>
         <button
           type="button"
-          className="w-full text-left text-sm px-2 py-1.5 text-muted-foreground hover:text-foreground"
+          className="w-full rounded-sm px-3 py-2 text-left text-sm text-muted-foreground hover:bg-muted hover:text-foreground"
           onClick={async () => {
             await logoutAdminFn();
             window.location.href = "/admin/login";
