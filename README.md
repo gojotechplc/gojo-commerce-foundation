@@ -3,6 +3,44 @@
 Corporate website for Gojo Solutions PLC (Addis Ababa), the parent company of
 Gojo Shop (gojoshop.et). Built with TanStack Start + Tailwind v4.
 
+## Getting started
+
+### Prerequisites
+
+- [Bun](https://bun.sh) (preferred) — the lockfile is `bun.lock`
+- Node.js v20+ (if you prefer npm/pnpm)
+
+#### Install Bun (if not already installed)
+
+```bash
+curl -fsSL https://bun.sh/install | bash
+source ~/.zshrc   # or restart your terminal
+```
+
+### Install dependencies
+
+```bash
+bun install
+```
+
+### Run the dev server
+
+```bash
+bun run dev
+```
+
+The app starts at **http://localhost:5173** (Vite will pick the next available
+port if 5173 is in use — check your terminal output).
+
+### Other commands
+
+| Command | Description |
+|---|---|
+| `bun run build` | Production build |
+| `bun run preview` | Preview the production build locally |
+| `bun run lint` | Run ESLint |
+| `bun run format` | Format code with Prettier |
+
 ## Editing copy
 
 All company-facing copy lives in **`src/lib/content.ts`** — company facts, the
