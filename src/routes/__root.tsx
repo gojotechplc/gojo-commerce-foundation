@@ -85,15 +85,19 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { property: "og:site_name", content: "Gojo Solutions PLC" },
       {
         property: "og:title",
-        content: "Gojo Solutions PLC — Trust-driven commerce infrastructure",
+        content: "Gojo Solutions PLC — Trust-driven commerce infrastructure in Ethiopia",
       },
       {
         property: "og:description",
         content:
-          "The parent company behind Gojo Shop. Building reliable commerce infrastructure for Ethiopia.",
+          "Gojo Solutions PLC builds the infrastructure, systems, and partnerships that make commerce more reliable, efficient, and accessible in Ethiopia. Parent of Gojo Shop.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:title", content: "Gojo Solutions PLC — Trust-driven commerce infrastructure in Ethiopia" },
+      { name: "twitter:description", content: "Gojo Solutions PLC builds the infrastructure, systems, and partnerships that make commerce more reliable, efficient, and accessible in Ethiopia. Parent of Gojo Shop." },
+      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/ecfaf43d-0d3e-4d93-8b3c-81e3aa7bc7d9/id-preview-61d13a51--86bb7f8b-862e-4d6e-a0b1-be77dbac8625.lovable.app-1784269312089.png" },
+      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/ecfaf43d-0d3e-4d93-8b3c-81e3aa7bc7d9/id-preview-61d13a51--86bb7f8b-862e-4d6e-a0b1-be77dbac8625.lovable.app-1784269312089.png" },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
