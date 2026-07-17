@@ -9,8 +9,44 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as WhatWeDoRouteImport } from './routes/what-we-do'
+import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
+import { Route as PartnershipsRouteImport } from './routes/partnerships'
+import { Route as GojoShopRouteImport } from './routes/gojo-shop'
+import { Route as ContactRouteImport } from './routes/contact'
+import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
 
+const WhatWeDoRoute = WhatWeDoRouteImport.update({
+  id: '/what-we-do',
+  path: '/what-we-do',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
+  id: '/sitemap.xml',
+  path: '/sitemap.xml',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PartnershipsRoute = PartnershipsRouteImport.update({
+  id: '/partnerships',
+  path: '/partnerships',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const GojoShopRoute = GojoShopRouteImport.update({
+  id: '/gojo-shop',
+  path: '/gojo-shop',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ContactRoute = ContactRouteImport.update({
+  id: '/contact',
+  path: '/contact',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AboutRoute = AboutRouteImport.update({
+  id: '/about',
+  path: '/about',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -19,28 +55,116 @@ const IndexRoute = IndexRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
+  '/contact': typeof ContactRoute
+  '/gojo-shop': typeof GojoShopRoute
+  '/partnerships': typeof PartnershipsRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/what-we-do': typeof WhatWeDoRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
+  '/contact': typeof ContactRoute
+  '/gojo-shop': typeof GojoShopRoute
+  '/partnerships': typeof PartnershipsRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/what-we-do': typeof WhatWeDoRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
+  '/contact': typeof ContactRoute
+  '/gojo-shop': typeof GojoShopRoute
+  '/partnerships': typeof PartnershipsRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/what-we-do': typeof WhatWeDoRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/about'
+    | '/contact'
+    | '/gojo-shop'
+    | '/partnerships'
+    | '/sitemap.xml'
+    | '/what-we-do'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/about'
+    | '/contact'
+    | '/gojo-shop'
+    | '/partnerships'
+    | '/sitemap.xml'
+    | '/what-we-do'
+  id:
+    | '__root__'
+    | '/'
+    | '/about'
+    | '/contact'
+    | '/gojo-shop'
+    | '/partnerships'
+    | '/sitemap.xml'
+    | '/what-we-do'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AboutRoute: typeof AboutRoute
+  ContactRoute: typeof ContactRoute
+  GojoShopRoute: typeof GojoShopRoute
+  PartnershipsRoute: typeof PartnershipsRoute
+  SitemapDotxmlRoute: typeof SitemapDotxmlRoute
+  WhatWeDoRoute: typeof WhatWeDoRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/what-we-do': {
+      id: '/what-we-do'
+      path: '/what-we-do'
+      fullPath: '/what-we-do'
+      preLoaderRoute: typeof WhatWeDoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sitemap.xml': {
+      id: '/sitemap.xml'
+      path: '/sitemap.xml'
+      fullPath: '/sitemap.xml'
+      preLoaderRoute: typeof SitemapDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/partnerships': {
+      id: '/partnerships'
+      path: '/partnerships'
+      fullPath: '/partnerships'
+      preLoaderRoute: typeof PartnershipsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/gojo-shop': {
+      id: '/gojo-shop'
+      path: '/gojo-shop'
+      fullPath: '/gojo-shop'
+      preLoaderRoute: typeof GojoShopRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/contact': {
+      id: '/contact'
+      path: '/contact'
+      fullPath: '/contact'
+      preLoaderRoute: typeof ContactRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/about': {
+      id: '/about'
+      path: '/about'
+      fullPath: '/about'
+      preLoaderRoute: typeof AboutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -53,17 +177,13 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AboutRoute: AboutRoute,
+  ContactRoute: ContactRoute,
+  GojoShopRoute: GojoShopRoute,
+  PartnershipsRoute: PartnershipsRoute,
+  SitemapDotxmlRoute: SitemapDotxmlRoute,
+  WhatWeDoRoute: WhatWeDoRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
