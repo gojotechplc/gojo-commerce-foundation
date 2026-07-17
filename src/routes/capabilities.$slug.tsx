@@ -53,7 +53,7 @@ function CapabilityPage() {
           ← What we do
         </Link>
         <div className="eyebrow rule-ochre mt-6">{c.pageEyebrow ?? "Capability"}</div>
-        <h1 className="mt-5 font-display text-4xl md:text-6xl leading-[1.05] max-w-3xl">
+        <h1 className="mt-5 font-display text-3xl sm:text-4xl md:text-6xl leading-[1.05] max-w-3xl text-balance">
           {c.title}
         </h1>
         <p className="mt-6 text-lg text-muted-foreground max-w-2xl leading-relaxed">

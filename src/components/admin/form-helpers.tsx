@@ -10,7 +10,7 @@ export function AdminPageHeader({
 }) {
   return (
     <div className="mb-8">
-      <h1 className="font-display text-3xl">{title}</h1>
+      <h1 className="font-display text-2xl sm:text-3xl">{title}</h1>
       {description ? (
         <p className="mt-2 text-sm text-muted-foreground max-w-2xl">{description}</p>
       ) : null}

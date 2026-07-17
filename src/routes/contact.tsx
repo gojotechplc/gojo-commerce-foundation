@@ -70,7 +70,7 @@ function Contact() {
       <section className="container-page pt-20 pb-16 grid gap-12 md:grid-cols-[1fr_1.1fr]">
         <div>
           <div className="eyebrow rule-ochre">{page?.headerEyebrow ?? "Contact"}</div>
-          <h1 className="mt-5 font-display text-4xl md:text-5xl leading-[1.05]">
+          <h1 className="mt-5 font-display text-3xl sm:text-4xl md:text-5xl leading-[1.05] text-balance break-words">
             {page?.headerHeading ?? "Talk to Gojo Solutions."}
           </h1>
           <p className="mt-6 text-muted-foreground leading-relaxed max-w-md">
@@ -88,7 +88,7 @@ function Contact() {
               <dd className="mt-1">
                 <a
                   href={`mailto:${company.contactEmail}`}
-                  className="font-display text-xl text-primary hover:text-forest"
+                  className="font-display text-lg sm:text-xl text-primary hover:text-forest break-all"
                 >
                   {company.contactEmail}
                 </a>

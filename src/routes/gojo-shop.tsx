@@ -74,7 +74,7 @@ function GojoShop() {
       <section className="container-page pt-20 pb-12 grid gap-12 md:grid-cols-[1.15fr_1fr] items-end">
         <div>
           <div className="eyebrow rule-ochre">{page?.heroEyebrow ?? "Core engine"}</div>
-          <h1 className="mt-5 font-display text-4xl md:text-6xl leading-[1.05]">
+          <h1 className="mt-5 font-display text-3xl sm:text-4xl md:text-6xl leading-[1.05] text-balance">
             {page?.heroHeading ?? "Gojo Shop is where the promise ships."}
           </h1>
           <p className="mt-6 text-lg text-muted-foreground max-w-xl leading-relaxed">

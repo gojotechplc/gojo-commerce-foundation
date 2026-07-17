@@ -32,7 +32,7 @@ function Partnerships() {
           <div className="eyebrow rule-ochre">
             {page?.headerEyebrow ?? "Partnerships & vendors"}
           </div>
-          <h1 className="mt-5 font-display text-4xl md:text-6xl leading-[1.05] max-w-3xl">
+          <h1 className="mt-5 font-display text-3xl sm:text-4xl md:text-6xl leading-[1.05] max-w-3xl text-balance">
             {page?.headerHeading ?? "We build alongside partners who take trust seriously."}
           </h1>
           <p className="mt-6 text-lg text-muted-foreground max-w-2xl leading-relaxed">

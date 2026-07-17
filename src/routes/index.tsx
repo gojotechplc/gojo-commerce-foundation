@@ -113,7 +113,7 @@ function Home() {
 
   return (
     <PageShell chrome={chrome}>
-      <section className="relative isolate min-h-[min(86vh,880px)] flex items-end overflow-hidden bg-primary text-primary-foreground">
+      <section className="relative isolate min-h-[min(78dvh,720px)] sm:min-h-[min(86vh,880px)] flex items-end overflow-hidden bg-primary text-primary-foreground">
         {/* Full-bleed landscape plane */}
         <div className="absolute inset-0 -z-10">
           {hero?.imagePath ? (
@@ -149,12 +149,12 @@ function Home() {
           />
         </div>
 
-        <div className="container-page relative w-full pt-28 pb-14 md:pt-36 md:pb-20 lg:pb-24">
+        <div className="container-page relative w-full pt-20 pb-10 sm:pt-28 sm:pb-14 md:pt-36 md:pb-20 lg:pb-24">
           <div className="max-w-2xl lg:max-w-3xl">
             <div className="eyebrow text-primary-foreground/70 rule-ochre animate-[hero-rise_0.7s_ease-out_both]">
               {hero?.eyebrow ?? "Gojo Solutions PLC · Addis Ababa"}
             </div>
-            <h1 className="mt-5 md:mt-6 font-display text-[2.35rem] sm:text-5xl md:text-6xl lg:text-[4.25rem] leading-[1.02] tracking-tight text-balance animate-[hero-rise_0.8s_ease-out_0.08s_both]">
+            <h1 className="mt-4 sm:mt-5 md:mt-6 font-display text-[1.85rem] sm:text-5xl md:text-6xl lg:text-[4.25rem] leading-[1.05] tracking-tight text-balance animate-[hero-rise_0.8s_ease-out_0.08s_both]">
               {heroHeading.includes("infrastructure") ? (
                 <>
                   {heroHeading.split("infrastructure")[0]}
@@ -227,7 +227,7 @@ function Home() {
         </div>
       </section>
 
-      <section className="container-page py-20 md:py-28">
+      <section className="container-page py-14 sm:py-20 md:py-28">
         <div className="grid gap-10 md:grid-cols-[1fr_1.2fr] items-center">
           <div>
             <div className="eyebrow rule-ochre">{hub?.eyebrow ?? "Structure"}</div>
@@ -270,7 +270,7 @@ function Home() {
             className="absolute inset-0 h-full w-full object-cover"
           />
           <div className="absolute inset-0 bg-primary/70" />
-          <div className="relative container-page py-20 md:py-28 text-primary-foreground max-w-3xl">
+          <div className="relative container-page py-14 sm:py-20 md:py-28 text-primary-foreground max-w-3xl">
             {midBand.eyebrow && (
               <div className="eyebrow text-primary-foreground/70 rule-ochre">{midBand.eyebrow}</div>
             )}
@@ -287,7 +287,7 @@ function Home() {
       )}
 
       <section className="bg-secondary/60 border-y border-border/60">
-        <div className="container-page py-20 md:py-24">
+        <div className="container-page py-14 sm:py-20 md:py-24">
           <div className="max-w-2xl">
             <div className="eyebrow rule-ochre">
               {promiseSection?.eyebrow ?? "The Gojo Promise"}
@@ -313,7 +313,7 @@ function Home() {
         </div>
       </section>
 
-      <section className="container-page py-20 md:py-24">
+      <section className="container-page py-14 sm:py-20 md:py-24">
         <div className="grid gap-10 md:grid-cols-3">
           {audiences.map((a) => (
             <div key={a.id ?? a.label} className="border-t border-primary/25 pt-6">
@@ -324,8 +324,8 @@ function Home() {
         </div>
       </section>
 
-      <section className="container-page pb-24">
-        <div className="rounded-md border border-primary/20 bg-card p-8 md:p-12 grid gap-8 md:grid-cols-2 items-center">
+      <section className="container-page pb-16 sm:pb-24">
+        <div className="rounded-md border border-primary/20 bg-card p-6 sm:p-8 md:p-12 grid gap-8 md:grid-cols-2 items-center">
           <div>
             <div className="eyebrow rule-ochre">{work?.eyebrow ?? "Work with us"}</div>
             <h2 className="mt-4 font-display text-3xl">

@@ -29,7 +29,7 @@ function About() {
     <PageShell chrome={chrome}>
       <section className="container-page pt-20 pb-12">
         <div className="eyebrow rule-ochre">{header?.eyebrow ?? "About"}</div>
-        <h1 className="mt-5 font-display text-4xl md:text-6xl leading-[1.05] max-w-3xl">
+        <h1 className="mt-5 font-display text-3xl sm:text-4xl md:text-6xl leading-[1.05] max-w-3xl text-balance">
           {header?.heading ?? "A holding company built to move Ethiopian commerce forward."}
         </h1>
         <p className="mt-6 text-lg text-muted-foreground max-w-2xl leading-relaxed">
