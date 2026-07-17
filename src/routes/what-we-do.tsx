@@ -1,47 +1,46 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { PageShell } from "@/components/site-chrome";
 import { HubSpokeDiagram } from "@/components/hub-spoke";
-import { capabilities } from "@/lib/content";
+import { getWhatWeDoPageFn } from "@/lib/public.server";
 
 export const Route = createFileRoute("/what-we-do")({
-  head: () => ({
-    meta: [
-      { title: "What We Do — Gojo Solutions PLC" },
-      {
-        name: "description",
-        content:
-          "Five capability arms supporting one core engine: import & trade, digital platform, logistics & fulfillment, investment & consulting, and marketing & market development.",
-      },
-      { property: "og:title", content: "What We Do — Gojo Solutions PLC" },
-      {
-        property: "og:description",
-        content:
-          "The five capability arms of Gojo Solutions PLC, and how each one strengthens Gojo Shop.",
-      },
-      { property: "og:url", content: "/what-we-do" },
-    ],
-    links: [{ rel: "canonical", href: "/what-we-do" }],
-  }),
+  loader: () => getWhatWeDoPageFn(),
+  head: ({ loaderData }) => {
+    const meta = loaderData?.meta;
+    return {
+      meta: meta
+        ? [
+            { title: meta.title },
+            { name: "description", content: meta.description },
+            { property: "og:title", content: meta.ogTitle },
+            { property: "og:description", content: meta.ogDescription },
+            { property: "og:url", content: meta.ogUrl },
+          ]
+        : [{ title: "What We Do — Gojo Solutions PLC" }],
+      links: [{ rel: "canonical", href: meta?.canonical ?? "/what-we-do" }],
+    };
+  },
   component: WhatWeDo,
 });
 
 function WhatWeDo() {
+  const { chrome, header, capabilities } = Route.useLoaderData();
+
   return (
-    <PageShell>
+    <PageShell chrome={chrome}>
       <section className="container-page pt-20 pb-10">
-        <div className="eyebrow rule-ochre">What we do</div>
+        <div className="eyebrow rule-ochre">{header?.eyebrow ?? "What we do"}</div>
         <h1 className="mt-5 font-display text-4xl md:text-6xl leading-[1.05] max-w-3xl">
-          Five capabilities. One purpose: make commerce work.
+          {header?.heading ?? "Five capabilities. One purpose: make commerce work."}
         </h1>
         <p className="mt-6 text-lg text-muted-foreground max-w-2xl leading-relaxed">
-          Each arm of Gojo Solutions exists to remove a specific point of friction in
-          Ethiopian commerce. Together, they make Gojo Shop possible — and make it
-          repeatable for partners who plug in.
+          {header?.body ??
+            "Each arm of Gojo Solutions exists to remove a specific point of friction in Ethiopian commerce. Together, they make Gojo Shop possible — and make it repeatable for partners who plug in."}
         </p>
       </section>
 
       <section className="container-page py-8">
-        <HubSpokeDiagram />
+        <HubSpokeDiagram capabilities={capabilities} />
       </section>
 
       <section className="container-page py-16">
@@ -58,6 +57,13 @@ function WhatWeDo() {
                 </div>
                 <h2 className="mt-3 font-display text-3xl leading-tight">{c.title}</h2>
                 <p className="mt-4 text-muted-foreground leading-relaxed">{c.short}</p>
+                <Link
+                  to="/capabilities/$slug"
+                  params={{ slug: c.slug }}
+                  className="mt-5 inline-flex text-sm font-medium text-primary hover:text-forest"
+                >
+                  Open full page →
+                </Link>
               </div>
               <div className="border-l-2 border-primary/20 pl-6 md:pl-10">
                 <div className="eyebrow">Key functions</div>

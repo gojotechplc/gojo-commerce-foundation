@@ -1,42 +1,44 @@
 import { Link } from "@tanstack/react-router";
-import { company } from "@/lib/content";
+import type { SiteChromeData } from "@/lib/site-types";
 
-const nav = [
-  { to: "/", label: "Home" },
-  { to: "/about", label: "About" },
-  { to: "/what-we-do", label: "What We Do" },
-  { to: "/gojo-shop", label: "Gojo Shop" },
-  { to: "/partnerships", label: "Partnerships" },
-  { to: "/contact", label: "Contact" },
-] as const;
-
-export function SiteHeader() {
+export function SiteHeader({ chrome }: { chrome: SiteChromeData }) {
+  const { company, logo, nav, navCtaLabel, navCtaHref } = chrome;
   return (
     <header className="sticky top-0 z-40 border-b border-border/60 bg-background/85 backdrop-blur">
       <div className="container-page flex h-16 items-center justify-between gap-8">
-        <Link to="/" className="flex items-center gap-2.5 group">
-          <span
-            aria-hidden
-            className="grid h-8 w-8 place-items-center rounded-sm bg-primary text-primary-foreground font-display text-lg leading-none"
-          >
-            G
-          </span>
-          <span className="font-display text-lg tracking-tight">
-            {company.shortName}
-            <span className="text-muted-foreground font-sans text-xs ml-1.5 align-middle">
-              PLC
-            </span>
-          </span>
+        <Link to="/" className="flex items-center gap-2.5 group min-w-0">
+          {logo ? (
+            <img
+              src={logo.filePath}
+              alt={logo.altText || company.name}
+              className="h-9 w-auto max-w-[180px] object-contain"
+            />
+          ) : (
+            <>
+              <span
+                aria-hidden
+                className="grid h-8 w-8 place-items-center rounded-sm bg-primary text-primary-foreground font-display text-lg leading-none shrink-0"
+              >
+                G
+              </span>
+              <span className="font-display text-lg tracking-tight truncate">
+                {company.shortName}
+                <span className="text-muted-foreground font-sans text-xs ml-1.5 align-middle">
+                  PLC
+                </span>
+              </span>
+            </>
+          )}
         </Link>
 
         <nav className="hidden md:flex items-center gap-7 text-sm">
           {nav.map((n) => (
             <Link
-              key={n.to}
-              to={n.to}
+              key={n.href}
+              to={n.href}
               className="text-foreground/75 hover:text-primary transition-colors"
               activeProps={{ className: "text-primary font-medium" }}
-              activeOptions={{ exact: n.to === "/" }}
+              activeOptions={{ exact: n.href === "/" }}
             >
               {n.label}
             </Link>
@@ -44,30 +46,30 @@ export function SiteHeader() {
         </nav>
 
         <a
-          href={company.shopUrl}
+          href={navCtaHref || company.shopUrl}
           target="_blank"
           rel="noreferrer"
           className="hidden sm:inline-flex items-center gap-1.5 rounded-sm bg-primary px-3.5 py-2 text-xs font-medium text-primary-foreground hover:bg-forest transition-colors"
         >
-          Visit Gojo Shop →
+          {navCtaLabel}
         </a>
       </div>
-      <MobileNav />
+      <MobileNav nav={nav} />
     </header>
   );
 }
 
-function MobileNav() {
+function MobileNav({ nav }: { nav: SiteChromeData["nav"] }) {
   return (
     <nav className="md:hidden border-t border-border/60 bg-background overflow-x-auto">
       <div className="container-page flex gap-5 py-2.5 text-xs whitespace-nowrap">
         {nav.map((n) => (
           <Link
-            key={n.to}
-            to={n.to}
+            key={n.href}
+            to={n.href}
             className="text-foreground/70"
             activeProps={{ className: "text-primary font-medium" }}
-            activeOptions={{ exact: n.to === "/" }}
+            activeOptions={{ exact: n.href === "/" }}
           >
             {n.label}
           </Link>
@@ -77,12 +79,24 @@ function MobileNav() {
   );
 }
 
-export function SiteFooter() {
+export function SiteFooter({ chrome }: { chrome: SiteChromeData }) {
+  const { company, logo, footer } = chrome;
   return (
     <footer className="mt-24 border-t border-border/60 bg-primary text-primary-foreground">
       <div className="container-page py-14 grid gap-10 md:grid-cols-4">
         <div className="md:col-span-2 max-w-sm">
-          <div className="font-display text-xl">{company.name}</div>
+          {logo ? (
+            <div className="inline-flex items-center rounded-sm bg-primary-foreground px-3 py-2">
+              <img
+                src={logo.filePath}
+                alt={logo.altText || company.name}
+                className="h-9 w-auto max-w-[200px] object-contain"
+              />
+            </div>
+          ) : (
+            <div className="font-display text-xl">{company.name}</div>
+          )}
+          {logo && <div className="mt-3 font-display text-lg">{company.name}</div>}
           <p className="mt-3 text-sm text-primary-foreground/75 leading-relaxed">
             {company.positioning}
           </p>
@@ -90,9 +104,9 @@ export function SiteFooter() {
         <div>
           <div className="eyebrow text-primary-foreground/70">Explore</div>
           <ul className="mt-3 space-y-2 text-sm">
-            {nav.slice(1).map((n) => (
-              <li key={n.to}>
-                <Link to={n.to} className="hover:text-accent transition-colors">
+            {footer.map((n) => (
+              <li key={n.href}>
+                <Link to={n.href} className="hover:text-accent transition-colors">
                   {n.label}
                 </Link>
               </li>
@@ -123,7 +137,9 @@ export function SiteFooter() {
       </div>
       <div className="border-t border-primary-foreground/15">
         <div className="container-page py-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 text-xs text-primary-foreground/60">
-          <div>© {new Date().getFullYear()} {company.name}. All rights reserved.</div>
+          <div>
+            © {new Date().getFullYear()} {company.name}. All rights reserved.
+          </div>
           <div>Addis Ababa · Ethiopia</div>
         </div>
       </div>
@@ -131,12 +147,18 @@ export function SiteFooter() {
   );
 }
 
-export function PageShell({ children }: { children: React.ReactNode }) {
+export function PageShell({
+  children,
+  chrome,
+}: {
+  children: React.ReactNode;
+  chrome: SiteChromeData;
+}) {
   return (
     <div className="min-h-screen flex flex-col">
-      <SiteHeader />
+      <SiteHeader chrome={chrome} />
       <main className="flex-1">{children}</main>
-      <SiteFooter />
+      <SiteFooter chrome={chrome} />
     </div>
   );
 }

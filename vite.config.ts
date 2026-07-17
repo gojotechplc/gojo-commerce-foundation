@@ -12,4 +12,9 @@ export default defineConfig({
     // nitro/vite builds from this
     server: { entry: "server" },
   },
+  // Self-hosted / VPS deploy: Node server with filesystem SQLite + uploads.
+  // Inside Lovable cloud builds this is still forced to Cloudflare.
+  nitro: {
+    preset: "bun",
+  },
 });

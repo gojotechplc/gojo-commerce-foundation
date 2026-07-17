@@ -15,7 +15,30 @@ import { Route as PartnershipsRouteImport } from './routes/partnerships'
 import { Route as GojoShopRouteImport } from './routes/gojo-shop'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as AboutRouteImport } from './routes/about'
+import { Route as AdminRouteRouteImport } from './routes/admin/route'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AdminIndexRouteImport } from './routes/admin/index'
+import { Route as CapabilitiesSlugRouteImport } from './routes/capabilities.$slug'
+import { Route as AdminWhatWeDoRouteImport } from './routes/admin/what-we-do'
+import { Route as AdminSettingsRouteImport } from './routes/admin/settings'
+import { Route as AdminPromiseRouteImport } from './routes/admin/promise'
+import { Route as AdminPartnershipsRouteImport } from './routes/admin/partnerships'
+import { Route as AdminNavigationRouteImport } from './routes/admin/navigation'
+import { Route as AdminMetaRouteImport } from './routes/admin/meta'
+import { Route as AdminMessagesRouteImport } from './routes/admin/messages'
+import { Route as AdminMediaRouteImport } from './routes/admin/media'
+import { Route as AdminLogoRouteImport } from './routes/admin/logo'
+import { Route as AdminLoginRouteImport } from './routes/admin/login'
+import { Route as AdminHomeRouteImport } from './routes/admin/home'
+import { Route as AdminGojoShopRouteImport } from './routes/admin/gojo-shop'
+import { Route as AdminFoundersRouteImport } from './routes/admin/founders'
+import { Route as AdminContactRouteImport } from './routes/admin/contact'
+import { Route as AdminCompanyRouteImport } from './routes/admin/company'
+import { Route as AdminCapabilitiesRouteImport } from './routes/admin/capabilities'
+import { Route as AdminAudiencesRouteImport } from './routes/admin/audiences'
+import { Route as AdminAboutRouteImport } from './routes/admin/about'
+import { Route as AdminCapabilitiesIndexRouteImport } from './routes/admin/capabilities.index'
+import { Route as AdminCapabilitiesIdRouteImport } from './routes/admin/capabilities.$id'
 
 const WhatWeDoRoute = WhatWeDoRouteImport.update({
   id: '/what-we-do',
@@ -47,20 +70,158 @@ const AboutRoute = AboutRouteImport.update({
   path: '/about',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminRouteRoute = AdminRouteRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminIndexRoute = AdminIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AdminRouteRoute,
+} as any)
+const CapabilitiesSlugRoute = CapabilitiesSlugRouteImport.update({
+  id: '/capabilities/$slug',
+  path: '/capabilities/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminWhatWeDoRoute = AdminWhatWeDoRouteImport.update({
+  id: '/what-we-do',
+  path: '/what-we-do',
+  getParentRoute: () => AdminRouteRoute,
+} as any)
+const AdminSettingsRoute = AdminSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => AdminRouteRoute,
+} as any)
+const AdminPromiseRoute = AdminPromiseRouteImport.update({
+  id: '/promise',
+  path: '/promise',
+  getParentRoute: () => AdminRouteRoute,
+} as any)
+const AdminPartnershipsRoute = AdminPartnershipsRouteImport.update({
+  id: '/partnerships',
+  path: '/partnerships',
+  getParentRoute: () => AdminRouteRoute,
+} as any)
+const AdminNavigationRoute = AdminNavigationRouteImport.update({
+  id: '/navigation',
+  path: '/navigation',
+  getParentRoute: () => AdminRouteRoute,
+} as any)
+const AdminMetaRoute = AdminMetaRouteImport.update({
+  id: '/meta',
+  path: '/meta',
+  getParentRoute: () => AdminRouteRoute,
+} as any)
+const AdminMessagesRoute = AdminMessagesRouteImport.update({
+  id: '/messages',
+  path: '/messages',
+  getParentRoute: () => AdminRouteRoute,
+} as any)
+const AdminMediaRoute = AdminMediaRouteImport.update({
+  id: '/media',
+  path: '/media',
+  getParentRoute: () => AdminRouteRoute,
+} as any)
+const AdminLogoRoute = AdminLogoRouteImport.update({
+  id: '/logo',
+  path: '/logo',
+  getParentRoute: () => AdminRouteRoute,
+} as any)
+const AdminLoginRoute = AdminLoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => AdminRouteRoute,
+} as any)
+const AdminHomeRoute = AdminHomeRouteImport.update({
+  id: '/home',
+  path: '/home',
+  getParentRoute: () => AdminRouteRoute,
+} as any)
+const AdminGojoShopRoute = AdminGojoShopRouteImport.update({
+  id: '/gojo-shop',
+  path: '/gojo-shop',
+  getParentRoute: () => AdminRouteRoute,
+} as any)
+const AdminFoundersRoute = AdminFoundersRouteImport.update({
+  id: '/founders',
+  path: '/founders',
+  getParentRoute: () => AdminRouteRoute,
+} as any)
+const AdminContactRoute = AdminContactRouteImport.update({
+  id: '/contact',
+  path: '/contact',
+  getParentRoute: () => AdminRouteRoute,
+} as any)
+const AdminCompanyRoute = AdminCompanyRouteImport.update({
+  id: '/company',
+  path: '/company',
+  getParentRoute: () => AdminRouteRoute,
+} as any)
+const AdminCapabilitiesRoute = AdminCapabilitiesRouteImport.update({
+  id: '/capabilities',
+  path: '/capabilities',
+  getParentRoute: () => AdminRouteRoute,
+} as any)
+const AdminAudiencesRoute = AdminAudiencesRouteImport.update({
+  id: '/audiences',
+  path: '/audiences',
+  getParentRoute: () => AdminRouteRoute,
+} as any)
+const AdminAboutRoute = AdminAboutRouteImport.update({
+  id: '/about',
+  path: '/about',
+  getParentRoute: () => AdminRouteRoute,
+} as any)
+const AdminCapabilitiesIndexRoute = AdminCapabilitiesIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AdminCapabilitiesRoute,
+} as any)
+const AdminCapabilitiesIdRoute = AdminCapabilitiesIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => AdminCapabilitiesRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/admin': typeof AdminRouteRouteWithChildren
   '/about': typeof AboutRoute
   '/contact': typeof ContactRoute
   '/gojo-shop': typeof GojoShopRoute
   '/partnerships': typeof PartnershipsRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/what-we-do': typeof WhatWeDoRoute
+  '/admin/about': typeof AdminAboutRoute
+  '/admin/audiences': typeof AdminAudiencesRoute
+  '/admin/capabilities': typeof AdminCapabilitiesRouteWithChildren
+  '/admin/company': typeof AdminCompanyRoute
+  '/admin/contact': typeof AdminContactRoute
+  '/admin/founders': typeof AdminFoundersRoute
+  '/admin/gojo-shop': typeof AdminGojoShopRoute
+  '/admin/home': typeof AdminHomeRoute
+  '/admin/login': typeof AdminLoginRoute
+  '/admin/logo': typeof AdminLogoRoute
+  '/admin/media': typeof AdminMediaRoute
+  '/admin/messages': typeof AdminMessagesRoute
+  '/admin/meta': typeof AdminMetaRoute
+  '/admin/navigation': typeof AdminNavigationRoute
+  '/admin/partnerships': typeof AdminPartnershipsRoute
+  '/admin/promise': typeof AdminPromiseRoute
+  '/admin/settings': typeof AdminSettingsRoute
+  '/admin/what-we-do': typeof AdminWhatWeDoRoute
+  '/capabilities/$slug': typeof CapabilitiesSlugRoute
+  '/admin/': typeof AdminIndexRoute
+  '/admin/capabilities/$id': typeof AdminCapabilitiesIdRoute
+  '/admin/capabilities/': typeof AdminCapabilitiesIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -70,27 +231,94 @@ export interface FileRoutesByTo {
   '/partnerships': typeof PartnershipsRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/what-we-do': typeof WhatWeDoRoute
+  '/admin/about': typeof AdminAboutRoute
+  '/admin/audiences': typeof AdminAudiencesRoute
+  '/admin/company': typeof AdminCompanyRoute
+  '/admin/contact': typeof AdminContactRoute
+  '/admin/founders': typeof AdminFoundersRoute
+  '/admin/gojo-shop': typeof AdminGojoShopRoute
+  '/admin/home': typeof AdminHomeRoute
+  '/admin/login': typeof AdminLoginRoute
+  '/admin/logo': typeof AdminLogoRoute
+  '/admin/media': typeof AdminMediaRoute
+  '/admin/messages': typeof AdminMessagesRoute
+  '/admin/meta': typeof AdminMetaRoute
+  '/admin/navigation': typeof AdminNavigationRoute
+  '/admin/partnerships': typeof AdminPartnershipsRoute
+  '/admin/promise': typeof AdminPromiseRoute
+  '/admin/settings': typeof AdminSettingsRoute
+  '/admin/what-we-do': typeof AdminWhatWeDoRoute
+  '/capabilities/$slug': typeof CapabilitiesSlugRoute
+  '/admin': typeof AdminIndexRoute
+  '/admin/capabilities/$id': typeof AdminCapabilitiesIdRoute
+  '/admin/capabilities': typeof AdminCapabilitiesIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/admin': typeof AdminRouteRouteWithChildren
   '/about': typeof AboutRoute
   '/contact': typeof ContactRoute
   '/gojo-shop': typeof GojoShopRoute
   '/partnerships': typeof PartnershipsRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/what-we-do': typeof WhatWeDoRoute
+  '/admin/about': typeof AdminAboutRoute
+  '/admin/audiences': typeof AdminAudiencesRoute
+  '/admin/capabilities': typeof AdminCapabilitiesRouteWithChildren
+  '/admin/company': typeof AdminCompanyRoute
+  '/admin/contact': typeof AdminContactRoute
+  '/admin/founders': typeof AdminFoundersRoute
+  '/admin/gojo-shop': typeof AdminGojoShopRoute
+  '/admin/home': typeof AdminHomeRoute
+  '/admin/login': typeof AdminLoginRoute
+  '/admin/logo': typeof AdminLogoRoute
+  '/admin/media': typeof AdminMediaRoute
+  '/admin/messages': typeof AdminMessagesRoute
+  '/admin/meta': typeof AdminMetaRoute
+  '/admin/navigation': typeof AdminNavigationRoute
+  '/admin/partnerships': typeof AdminPartnershipsRoute
+  '/admin/promise': typeof AdminPromiseRoute
+  '/admin/settings': typeof AdminSettingsRoute
+  '/admin/what-we-do': typeof AdminWhatWeDoRoute
+  '/capabilities/$slug': typeof CapabilitiesSlugRoute
+  '/admin/': typeof AdminIndexRoute
+  '/admin/capabilities/$id': typeof AdminCapabilitiesIdRoute
+  '/admin/capabilities/': typeof AdminCapabilitiesIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/admin'
     | '/about'
     | '/contact'
     | '/gojo-shop'
     | '/partnerships'
     | '/sitemap.xml'
     | '/what-we-do'
+    | '/admin/about'
+    | '/admin/audiences'
+    | '/admin/capabilities'
+    | '/admin/company'
+    | '/admin/contact'
+    | '/admin/founders'
+    | '/admin/gojo-shop'
+    | '/admin/home'
+    | '/admin/login'
+    | '/admin/logo'
+    | '/admin/media'
+    | '/admin/messages'
+    | '/admin/meta'
+    | '/admin/navigation'
+    | '/admin/partnerships'
+    | '/admin/promise'
+    | '/admin/settings'
+    | '/admin/what-we-do'
+    | '/capabilities/$slug'
+    | '/admin/'
+    | '/admin/capabilities/$id'
+    | '/admin/capabilities/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -100,25 +328,71 @@ export interface FileRouteTypes {
     | '/partnerships'
     | '/sitemap.xml'
     | '/what-we-do'
+    | '/admin/about'
+    | '/admin/audiences'
+    | '/admin/company'
+    | '/admin/contact'
+    | '/admin/founders'
+    | '/admin/gojo-shop'
+    | '/admin/home'
+    | '/admin/login'
+    | '/admin/logo'
+    | '/admin/media'
+    | '/admin/messages'
+    | '/admin/meta'
+    | '/admin/navigation'
+    | '/admin/partnerships'
+    | '/admin/promise'
+    | '/admin/settings'
+    | '/admin/what-we-do'
+    | '/capabilities/$slug'
+    | '/admin'
+    | '/admin/capabilities/$id'
+    | '/admin/capabilities'
   id:
     | '__root__'
     | '/'
+    | '/admin'
     | '/about'
     | '/contact'
     | '/gojo-shop'
     | '/partnerships'
     | '/sitemap.xml'
     | '/what-we-do'
+    | '/admin/about'
+    | '/admin/audiences'
+    | '/admin/capabilities'
+    | '/admin/company'
+    | '/admin/contact'
+    | '/admin/founders'
+    | '/admin/gojo-shop'
+    | '/admin/home'
+    | '/admin/login'
+    | '/admin/logo'
+    | '/admin/media'
+    | '/admin/messages'
+    | '/admin/meta'
+    | '/admin/navigation'
+    | '/admin/partnerships'
+    | '/admin/promise'
+    | '/admin/settings'
+    | '/admin/what-we-do'
+    | '/capabilities/$slug'
+    | '/admin/'
+    | '/admin/capabilities/$id'
+    | '/admin/capabilities/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AdminRouteRoute: typeof AdminRouteRouteWithChildren
   AboutRoute: typeof AboutRoute
   ContactRoute: typeof ContactRoute
   GojoShopRoute: typeof GojoShopRoute
   PartnershipsRoute: typeof PartnershipsRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   WhatWeDoRoute: typeof WhatWeDoRoute
+  CapabilitiesSlugRoute: typeof CapabilitiesSlugRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -165,6 +439,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AboutRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin': {
+      id: '/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AdminRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -172,17 +453,234 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/': {
+      id: '/admin/'
+      path: '/'
+      fullPath: '/admin/'
+      preLoaderRoute: typeof AdminIndexRouteImport
+      parentRoute: typeof AdminRouteRoute
+    }
+    '/capabilities/$slug': {
+      id: '/capabilities/$slug'
+      path: '/capabilities/$slug'
+      fullPath: '/capabilities/$slug'
+      preLoaderRoute: typeof CapabilitiesSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/what-we-do': {
+      id: '/admin/what-we-do'
+      path: '/what-we-do'
+      fullPath: '/admin/what-we-do'
+      preLoaderRoute: typeof AdminWhatWeDoRouteImport
+      parentRoute: typeof AdminRouteRoute
+    }
+    '/admin/settings': {
+      id: '/admin/settings'
+      path: '/settings'
+      fullPath: '/admin/settings'
+      preLoaderRoute: typeof AdminSettingsRouteImport
+      parentRoute: typeof AdminRouteRoute
+    }
+    '/admin/promise': {
+      id: '/admin/promise'
+      path: '/promise'
+      fullPath: '/admin/promise'
+      preLoaderRoute: typeof AdminPromiseRouteImport
+      parentRoute: typeof AdminRouteRoute
+    }
+    '/admin/partnerships': {
+      id: '/admin/partnerships'
+      path: '/partnerships'
+      fullPath: '/admin/partnerships'
+      preLoaderRoute: typeof AdminPartnershipsRouteImport
+      parentRoute: typeof AdminRouteRoute
+    }
+    '/admin/navigation': {
+      id: '/admin/navigation'
+      path: '/navigation'
+      fullPath: '/admin/navigation'
+      preLoaderRoute: typeof AdminNavigationRouteImport
+      parentRoute: typeof AdminRouteRoute
+    }
+    '/admin/meta': {
+      id: '/admin/meta'
+      path: '/meta'
+      fullPath: '/admin/meta'
+      preLoaderRoute: typeof AdminMetaRouteImport
+      parentRoute: typeof AdminRouteRoute
+    }
+    '/admin/messages': {
+      id: '/admin/messages'
+      path: '/messages'
+      fullPath: '/admin/messages'
+      preLoaderRoute: typeof AdminMessagesRouteImport
+      parentRoute: typeof AdminRouteRoute
+    }
+    '/admin/media': {
+      id: '/admin/media'
+      path: '/media'
+      fullPath: '/admin/media'
+      preLoaderRoute: typeof AdminMediaRouteImport
+      parentRoute: typeof AdminRouteRoute
+    }
+    '/admin/logo': {
+      id: '/admin/logo'
+      path: '/logo'
+      fullPath: '/admin/logo'
+      preLoaderRoute: typeof AdminLogoRouteImport
+      parentRoute: typeof AdminRouteRoute
+    }
+    '/admin/login': {
+      id: '/admin/login'
+      path: '/login'
+      fullPath: '/admin/login'
+      preLoaderRoute: typeof AdminLoginRouteImport
+      parentRoute: typeof AdminRouteRoute
+    }
+    '/admin/home': {
+      id: '/admin/home'
+      path: '/home'
+      fullPath: '/admin/home'
+      preLoaderRoute: typeof AdminHomeRouteImport
+      parentRoute: typeof AdminRouteRoute
+    }
+    '/admin/gojo-shop': {
+      id: '/admin/gojo-shop'
+      path: '/gojo-shop'
+      fullPath: '/admin/gojo-shop'
+      preLoaderRoute: typeof AdminGojoShopRouteImport
+      parentRoute: typeof AdminRouteRoute
+    }
+    '/admin/founders': {
+      id: '/admin/founders'
+      path: '/founders'
+      fullPath: '/admin/founders'
+      preLoaderRoute: typeof AdminFoundersRouteImport
+      parentRoute: typeof AdminRouteRoute
+    }
+    '/admin/contact': {
+      id: '/admin/contact'
+      path: '/contact'
+      fullPath: '/admin/contact'
+      preLoaderRoute: typeof AdminContactRouteImport
+      parentRoute: typeof AdminRouteRoute
+    }
+    '/admin/company': {
+      id: '/admin/company'
+      path: '/company'
+      fullPath: '/admin/company'
+      preLoaderRoute: typeof AdminCompanyRouteImport
+      parentRoute: typeof AdminRouteRoute
+    }
+    '/admin/capabilities': {
+      id: '/admin/capabilities'
+      path: '/capabilities'
+      fullPath: '/admin/capabilities'
+      preLoaderRoute: typeof AdminCapabilitiesRouteImport
+      parentRoute: typeof AdminRouteRoute
+    }
+    '/admin/audiences': {
+      id: '/admin/audiences'
+      path: '/audiences'
+      fullPath: '/admin/audiences'
+      preLoaderRoute: typeof AdminAudiencesRouteImport
+      parentRoute: typeof AdminRouteRoute
+    }
+    '/admin/about': {
+      id: '/admin/about'
+      path: '/about'
+      fullPath: '/admin/about'
+      preLoaderRoute: typeof AdminAboutRouteImport
+      parentRoute: typeof AdminRouteRoute
+    }
+    '/admin/capabilities/': {
+      id: '/admin/capabilities/'
+      path: '/'
+      fullPath: '/admin/capabilities/'
+      preLoaderRoute: typeof AdminCapabilitiesIndexRouteImport
+      parentRoute: typeof AdminCapabilitiesRoute
+    }
+    '/admin/capabilities/$id': {
+      id: '/admin/capabilities/$id'
+      path: '/$id'
+      fullPath: '/admin/capabilities/$id'
+      preLoaderRoute: typeof AdminCapabilitiesIdRouteImport
+      parentRoute: typeof AdminCapabilitiesRoute
+    }
   }
 }
 
+interface AdminCapabilitiesRouteChildren {
+  AdminCapabilitiesIdRoute: typeof AdminCapabilitiesIdRoute
+  AdminCapabilitiesIndexRoute: typeof AdminCapabilitiesIndexRoute
+}
+
+const AdminCapabilitiesRouteChildren: AdminCapabilitiesRouteChildren = {
+  AdminCapabilitiesIdRoute: AdminCapabilitiesIdRoute,
+  AdminCapabilitiesIndexRoute: AdminCapabilitiesIndexRoute,
+}
+
+const AdminCapabilitiesRouteWithChildren =
+  AdminCapabilitiesRoute._addFileChildren(AdminCapabilitiesRouteChildren)
+
+interface AdminRouteRouteChildren {
+  AdminAboutRoute: typeof AdminAboutRoute
+  AdminAudiencesRoute: typeof AdminAudiencesRoute
+  AdminCapabilitiesRoute: typeof AdminCapabilitiesRouteWithChildren
+  AdminCompanyRoute: typeof AdminCompanyRoute
+  AdminContactRoute: typeof AdminContactRoute
+  AdminFoundersRoute: typeof AdminFoundersRoute
+  AdminGojoShopRoute: typeof AdminGojoShopRoute
+  AdminHomeRoute: typeof AdminHomeRoute
+  AdminLoginRoute: typeof AdminLoginRoute
+  AdminLogoRoute: typeof AdminLogoRoute
+  AdminMediaRoute: typeof AdminMediaRoute
+  AdminMessagesRoute: typeof AdminMessagesRoute
+  AdminMetaRoute: typeof AdminMetaRoute
+  AdminNavigationRoute: typeof AdminNavigationRoute
+  AdminPartnershipsRoute: typeof AdminPartnershipsRoute
+  AdminPromiseRoute: typeof AdminPromiseRoute
+  AdminSettingsRoute: typeof AdminSettingsRoute
+  AdminWhatWeDoRoute: typeof AdminWhatWeDoRoute
+  AdminIndexRoute: typeof AdminIndexRoute
+}
+
+const AdminRouteRouteChildren: AdminRouteRouteChildren = {
+  AdminAboutRoute: AdminAboutRoute,
+  AdminAudiencesRoute: AdminAudiencesRoute,
+  AdminCapabilitiesRoute: AdminCapabilitiesRouteWithChildren,
+  AdminCompanyRoute: AdminCompanyRoute,
+  AdminContactRoute: AdminContactRoute,
+  AdminFoundersRoute: AdminFoundersRoute,
+  AdminGojoShopRoute: AdminGojoShopRoute,
+  AdminHomeRoute: AdminHomeRoute,
+  AdminLoginRoute: AdminLoginRoute,
+  AdminLogoRoute: AdminLogoRoute,
+  AdminMediaRoute: AdminMediaRoute,
+  AdminMessagesRoute: AdminMessagesRoute,
+  AdminMetaRoute: AdminMetaRoute,
+  AdminNavigationRoute: AdminNavigationRoute,
+  AdminPartnershipsRoute: AdminPartnershipsRoute,
+  AdminPromiseRoute: AdminPromiseRoute,
+  AdminSettingsRoute: AdminSettingsRoute,
+  AdminWhatWeDoRoute: AdminWhatWeDoRoute,
+  AdminIndexRoute: AdminIndexRoute,
+}
+
+const AdminRouteRouteWithChildren = AdminRouteRoute._addFileChildren(
+  AdminRouteRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AdminRouteRoute: AdminRouteRouteWithChildren,
   AboutRoute: AboutRoute,
   ContactRoute: ContactRoute,
   GojoShopRoute: GojoShopRoute,
   PartnershipsRoute: PartnershipsRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   WhatWeDoRoute: WhatWeDoRoute,
+  CapabilitiesSlugRoute: CapabilitiesSlugRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

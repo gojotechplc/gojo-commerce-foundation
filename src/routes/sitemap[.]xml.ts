@@ -1,38 +1,48 @@
 import { createFileRoute } from "@tanstack/react-router";
 import type {} from "@tanstack/react-start";
+import { asc, eq } from "drizzle-orm";
+import { ensureSeeded, getDb } from "@/lib/db.server";
+import { capabilities, navLinks } from "../../db/schema";
 
-// TODO: replace with your project URL once a project name or custom domain is set.
-const BASE_URL = "";
-
-interface SitemapEntry {
-  path: string;
-  changefreq?: "always" | "hourly" | "daily" | "weekly" | "monthly" | "yearly" | "never";
-  priority?: string;
-}
+const BASE_URL = process.env.GOJO_SITE_URL?.replace(/\/$/, "") ?? "";
 
 export const Route = createFileRoute("/sitemap.xml")({
   server: {
     handlers: {
       GET: async () => {
-        const entries: SitemapEntry[] = [
-          { path: "/", changefreq: "weekly", priority: "1.0" },
-          { path: "/about", changefreq: "monthly", priority: "0.8" },
-          { path: "/what-we-do", changefreq: "monthly", priority: "0.9" },
-          { path: "/gojo-shop", changefreq: "monthly", priority: "0.9" },
-          { path: "/partnerships", changefreq: "monthly", priority: "0.8" },
-          { path: "/contact", changefreq: "yearly", priority: "0.6" },
-        ];
+        let paths = ["/", "/about", "/what-we-do", "/gojo-shop", "/partnerships", "/contact"];
+        try {
+          await ensureSeeded();
+          const db = getDb();
+          const rows = db
+            .select()
+            .from(navLinks)
+            .where(eq(navLinks.isVisible, 1))
+            .orderBy(asc(navLinks.sortOrder))
+            .all();
+          if (rows.length) {
+            paths = rows.map((r) => r.href);
+          }
+          const caps = db
+            .select({ slug: capabilities.slug })
+            .from(capabilities)
+            .where(eq(capabilities.isVisible, 1))
+            .all();
+          for (const c of caps) {
+            paths.push(`/capabilities/${c.slug}`);
+          }
+        } catch {
+          // fall back to defaults
+        }
 
-        const urls = entries.map((e) =>
+        const urls = paths.map((path, i) =>
           [
             `  <url>`,
-            `    <loc>${BASE_URL}${e.path}</loc>`,
-            e.changefreq ? `    <changefreq>${e.changefreq}</changefreq>` : null,
-            e.priority ? `    <priority>${e.priority}</priority>` : null,
+            `    <loc>${BASE_URL}${path}</loc>`,
+            `    <changefreq>${path === "/" ? "weekly" : "monthly"}</changefreq>`,
+            `    <priority>${path === "/" ? "1.0" : i < 3 ? "0.9" : "0.7"}</priority>`,
             `  </url>`,
-          ]
-            .filter(Boolean)
-            .join("\n"),
+          ].join("\n"),
         );
 
         const xml = [

@@ -16,6 +16,13 @@ dist-ssr
 .nitro
 *.local
 
+# SQLite + uploads (keep dirs, ignore runtime data)
+data/*.db
+data/*.db-*
+!data/.gitkeep
+public/uploads/**/*
+!public/uploads/**/.gitkeep
+
 # Wrangler / Cloudflare
 .wrangler/
 .dev.vars

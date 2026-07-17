@@ -1,65 +1,46 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { PageShell } from "@/components/site-chrome";
-import { company } from "@/lib/content";
+import { getAboutPageFn } from "@/lib/public.server";
 
 export const Route = createFileRoute("/about")({
-  head: () => ({
-    meta: [
-      { title: "About — Gojo Solutions PLC" },
-      {
-        name: "description",
-        content:
-          "Purpose, vision, mission, and the founders behind Gojo Solutions PLC — the parent company of Gojo Shop.",
-      },
-      { property: "og:title", content: "About Gojo Solutions PLC" },
-      {
-        property: "og:description",
-        content:
-          "The purpose, philosophy, and people behind Ethiopia's trust-driven commerce infrastructure company.",
-      },
-      { property: "og:url", content: "/about" },
-    ],
-    links: [{ rel: "canonical", href: "/about" }],
-  }),
+  loader: () => getAboutPageFn(),
+  head: ({ loaderData }) => {
+    const meta = loaderData?.meta;
+    return {
+      meta: meta
+        ? [
+            { title: meta.title },
+            { name: "description", content: meta.description },
+            { property: "og:title", content: meta.ogTitle },
+            { property: "og:description", content: meta.ogDescription },
+            { property: "og:url", content: meta.ogUrl },
+          ]
+        : [{ title: "About — Gojo Solutions PLC" }],
+      links: [{ rel: "canonical", href: meta?.canonical ?? "/about" }],
+    };
+  },
   component: About,
 });
 
-const blocks = [
-  {
-    label: "Purpose",
-    body: "To make commerce in Ethiopia more reliable, efficient, and accessible — for customers, vendors, and the market as a whole.",
-  },
-  {
-    label: "Vision",
-    body: "A commerce ecosystem where trust is the default: where prices are fair, quality is accountable, and delivery is a promise that holds.",
-  },
-  {
-    label: "Mission",
-    body: "Build the infrastructure, systems, and partnerships that let Ethiopian commerce operate at a higher standard — with Gojo Shop as the proof, and five capability arms as the engine room.",
-  },
-  {
-    label: "Corporate philosophy",
-    body: "Identify the problem. Build the solution. Execute now. We work upstream, ship real systems, and hold ourselves to the same standard we ask of every vendor on the platform.",
-  },
-];
-
 function About() {
+  const { chrome, header, blocks, founders, foundersHeader } = Route.useLoaderData();
+
   return (
-    <PageShell>
+    <PageShell chrome={chrome}>
       <section className="container-page pt-20 pb-12">
-        <div className="eyebrow rule-ochre">About</div>
+        <div className="eyebrow rule-ochre">{header?.eyebrow ?? "About"}</div>
         <h1 className="mt-5 font-display text-4xl md:text-6xl leading-[1.05] max-w-3xl">
-          A holding company built to move Ethiopian commerce forward.
+          {header?.heading ?? "A holding company built to move Ethiopian commerce forward."}
         </h1>
         <p className="mt-6 text-lg text-muted-foreground max-w-2xl leading-relaxed">
-          {company.positioning}
+          {header?.body ?? chrome.company.positioning}
         </p>
       </section>
 
       <section className="container-page py-12">
         <div className="grid gap-10 md:grid-cols-2">
           {blocks.map((b) => (
-            <div key={b.label} className="border-t border-primary/25 pt-6">
+            <div key={b.id} className="border-t border-primary/25 pt-6">
               <div className="eyebrow">{b.label}</div>
               <p className="mt-3 font-display text-2xl leading-snug">{b.body}</p>
             </div>
@@ -69,23 +50,30 @@ function About() {
 
       <section className="bg-secondary/60 border-y border-border/60 mt-12">
         <div className="container-page py-20">
-          <div className="eyebrow rule-ochre">Founders</div>
+          <div className="eyebrow rule-ochre">
+            {foundersHeader?.eyebrow ?? "Founders"}
+          </div>
           <h2 className="mt-4 font-display text-3xl md:text-4xl max-w-2xl">
-            Three founders. One operating philosophy.
+            {foundersHeader?.heading ?? "Three founders. One operating philosophy."}
           </h2>
           <div className="mt-12 grid gap-6 md:grid-cols-3">
-            {company.founders.map((f) => (
-              <div key={f.name} className="rounded-md bg-card border border-border p-6">
-                <div
-                  aria-hidden
-                  className="h-14 w-14 rounded-full bg-primary/10 grid place-items-center text-primary font-display text-xl"
-                >
-                  {f.name
-                    .split(" ")
-                    .map((n) => n[0])
-                    .join("")}
-                </div>
-                <div className="mt-5 font-display text-xl">{f.name}</div>
+            {founders.map((f) => (
+              <div key={f.id} className="rounded-md bg-card border border-border p-6">
+                {f.photoPath ? (
+                  <img
+                    src={f.photoPath}
+                    alt={f.name}
+                    className="h-16 w-16 rounded-full object-cover"
+                  />
+                ) : (
+                  <div
+                    aria-hidden
+                    className="h-16 w-16 rounded-full bg-primary/10 grid place-items-center font-display text-xl text-primary"
+                  >
+                    {f.name.slice(0, 1)}
+                  </div>
+                )}
+                <div className="mt-4 font-display text-xl">{f.name}</div>
                 <div className="mt-1 text-sm text-muted-foreground">{f.role}</div>
               </div>
             ))}

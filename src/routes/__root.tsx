@@ -11,6 +11,7 @@ import { useEffect, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
+import { getPublicGlobalMetaFn } from "../lib/public.server";
 
 function NotFoundComponent() {
   return (
@@ -71,45 +72,54 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
 }
 
 export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()({
-  head: () => ({
-    meta: [
-      { charSet: "utf-8" },
-      { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Gojo Solutions PLC — Trust-driven commerce infrastructure in Ethiopia" },
-      {
-        name: "description",
-        content:
-          "Gojo Solutions PLC builds the infrastructure, systems, and partnerships that make commerce more reliable, efficient, and accessible in Ethiopia. Parent of Gojo Shop.",
-      },
-      { name: "author", content: "Gojo Solutions PLC" },
-      { property: "og:site_name", content: "Gojo Solutions PLC" },
-      {
-        property: "og:title",
-        content: "Gojo Solutions PLC — Trust-driven commerce infrastructure in Ethiopia",
-      },
-      {
-        property: "og:description",
-        content:
-          "Gojo Solutions PLC builds the infrastructure, systems, and partnerships that make commerce more reliable, efficient, and accessible in Ethiopia. Parent of Gojo Shop.",
-      },
-      { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:title", content: "Gojo Solutions PLC — Trust-driven commerce infrastructure in Ethiopia" },
-      { name: "twitter:description", content: "Gojo Solutions PLC builds the infrastructure, systems, and partnerships that make commerce more reliable, efficient, and accessible in Ethiopia. Parent of Gojo Shop." },
-      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/ecfaf43d-0d3e-4d93-8b3c-81e3aa7bc7d9/id-preview-61d13a51--86bb7f8b-862e-4d6e-a0b1-be77dbac8625.lovable.app-1784269312089.png" },
-      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/ecfaf43d-0d3e-4d93-8b3c-81e3aa7bc7d9/id-preview-61d13a51--86bb7f8b-862e-4d6e-a0b1-be77dbac8625.lovable.app-1784269312089.png" },
-    ],
-    links: [
-      { rel: "stylesheet", href: appCss },
-      { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
-      { rel: "preconnect", href: "https://fonts.googleapis.com" },
-      { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
-      {
-        rel: "stylesheet",
-        href: "https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap",
-      },
-    ],
-  }),
+  loader: () => getPublicGlobalMetaFn(),
+  head: ({ loaderData }) => {
+    const m = loaderData;
+    const title =
+      m?.siteTitle ??
+      "Gojo Solutions PLC — Trust-driven commerce infrastructure in Ethiopia";
+    const description =
+      m?.siteDescription ??
+      "Gojo Solutions PLC builds the infrastructure, systems, and partnerships that make commerce more reliable, efficient, and accessible in Ethiopia. Parent of Gojo Shop.";
+    const ogImage = m?.ogImagePath ?? undefined;
+    const twitterImage = m?.twitterImagePath ?? ogImage;
+
+    return {
+      meta: [
+        { charSet: "utf-8" },
+        { name: "viewport", content: "width=device-width, initial-scale=1" },
+        { title },
+        { name: "description", content: description },
+        { name: "author", content: m?.author ?? "Gojo Solutions PLC" },
+        { property: "og:site_name", content: m?.ogSiteName ?? "Gojo Solutions PLC" },
+        { property: "og:title", content: m?.ogTitle ?? title },
+        { property: "og:description", content: m?.ogDescription ?? description },
+        { property: "og:type", content: m?.ogType ?? "website" },
+        ...(ogImage ? [{ property: "og:image", content: ogImage }] : []),
+        { name: "twitter:card", content: m?.twitterCard ?? "summary_large_image" },
+        { name: "twitter:title", content: m?.twitterTitle ?? title },
+        {
+          name: "twitter:description",
+          content: m?.twitterDescription ?? description,
+        },
+        ...(twitterImage ? [{ name: "twitter:image", content: twitterImage }] : []),
+      ],
+      links: [
+        { rel: "stylesheet", href: appCss },
+        { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
+        { rel: "preconnect", href: "https://fonts.googleapis.com" },
+        {
+          rel: "preconnect",
+          href: "https://fonts.gstatic.com",
+          crossOrigin: "anonymous",
+        },
+        {
+          rel: "stylesheet",
+          href: "https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap",
+        },
+      ],
+    };
+  },
   shellComponent: RootShell,
   component: RootComponent,
   notFoundComponent: NotFoundComponent,
