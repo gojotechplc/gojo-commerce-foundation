@@ -8,11 +8,19 @@ export function SiteHeader({ chrome }: { chrome: SiteChromeData }) {
       <div className="container-page flex h-16 items-center justify-between gap-8">
         <Link to="/" className="flex items-center gap-2.5 group min-w-0">
           {logo ? (
-            <img
-              src={logo.filePath}
-              alt={logo.altText || company.name}
-              className="h-9 w-auto max-w-[180px] object-contain"
-            />
+            <>
+              <img
+                src={logo.filePath}
+                alt={logo.altText || company.name}
+                className="h-9 w-auto max-w-[140px] object-contain shrink-0"
+              />
+              <span className="hidden md:inline font-display text-lg tracking-tight truncate">
+                {company.shortName}
+                <span className="text-muted-foreground font-sans text-xs ml-1.5 align-middle">
+                  PLC
+                </span>
+              </span>
+            </>
           ) : (
             <>
               <span

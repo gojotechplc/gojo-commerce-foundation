@@ -12,6 +12,7 @@ import {
   footerLinks,
   founders,
   globalMeta,
+  gojoShopGallery,
   gojoShopPage,
   gojoShopWorkflowImages,
   homeSections,
@@ -352,6 +353,12 @@ export async function loadGojoShopPage() {
     .where(eq(gojoShopWorkflowImages.isVisible, 1))
     .orderBy(asc(gojoShopWorkflowImages.sortOrder))
     .all();
+  const gallery = db
+    .select()
+    .from(gojoShopGallery)
+    .where(eq(gojoShopGallery.isVisible, 1))
+    .orderBy(asc(gojoShopGallery.sortOrder))
+    .all();
   const promise = db
     .select()
     .from(promiseItems)
@@ -359,7 +366,7 @@ export async function loadGojoShopPage() {
     .orderBy(asc(promiseItems.sortOrder))
     .all();
   const meta = await loadPageMeta("gojo-shop");
-  return { chrome, page, workflows, promise, meta };
+  return { chrome, page, workflows, gallery, promise, meta };
 }
 
 export async function loadPartnershipsPage() {

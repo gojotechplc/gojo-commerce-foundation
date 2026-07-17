@@ -61,6 +61,7 @@ function Home() {
         ctaHref?: string | null;
         cta2Label?: string | null;
         cta2Href?: string | null;
+        imagePath?: string | null;
       }
     | undefined;
   const tagline = sections.tagline_moment as
@@ -73,6 +74,15 @@ function Home() {
         body?: string | null;
         ctaLabel?: string | null;
         ctaHref?: string | null;
+        imagePath?: string | null;
+      }
+    | undefined;
+  const midBand = sections.mid_band as
+    | {
+        eyebrow?: string | null;
+        heading?: string | null;
+        body?: string | null;
+        imagePath?: string | null;
       }
     | undefined;
   const promiseSection = sections.promise_section as
@@ -87,6 +97,7 @@ function Home() {
         ctaHref?: string | null;
         cta2Label?: string | null;
         cta2Href?: string | null;
+        imagePath?: string | null;
       }
     | undefined;
   const capsGrid = sections.capabilities_grid as { eyebrow?: string | null } | undefined;
@@ -102,88 +113,89 @@ function Home() {
 
   return (
     <PageShell chrome={chrome}>
-      <section className="relative overflow-hidden">
-        <div
-          aria-hidden
-          className="absolute inset-0 -z-10"
-          style={{
-            background:
-              "radial-gradient(1200px 500px at 20% 0%, color-mix(in oklab, var(--forest-deep) 10%, transparent), transparent 60%), radial-gradient(800px 400px at 90% 20%, color-mix(in oklab, var(--ochre) 14%, transparent), transparent 70%)",
-          }}
-        />
-        <div className="container-page pt-20 pb-16 md:pt-28 md:pb-24 grid gap-12 md:grid-cols-[1.15fr_1fr] items-center">
-          <div>
-            <div className="eyebrow rule-ochre">
+      <section className="relative isolate min-h-[min(86vh,880px)] flex items-end overflow-hidden bg-primary text-primary-foreground">
+        {/* Full-bleed landscape plane */}
+        <div className="absolute inset-0 -z-10">
+          {hero?.imagePath ? (
+            <img
+              src={hero.imagePath}
+              alt=""
+              className="h-full w-full object-cover scale-105 animate-[hero-zoom_18s_ease-out_forwards]"
+            />
+          ) : (
+            <div
+              className="h-full w-full"
+              style={{
+                background:
+                  "radial-gradient(1200px 600px at 70% 40%, color-mix(in oklab, var(--ochre) 28%, transparent), transparent 55%), linear-gradient(135deg, var(--forest-deep) 0%, var(--primary) 45%, color-mix(in oklab, var(--forest) 80%, black) 100%)",
+              }}
+            />
+          )}
+          <div
+            aria-hidden
+            className="absolute inset-0 bg-gradient-to-r from-primary via-primary/80 to-primary/25 md:to-transparent"
+          />
+          <div
+            aria-hidden
+            className="absolute inset-0 bg-gradient-to-t from-primary/90 via-primary/20 to-primary/35"
+          />
+          <div
+            aria-hidden
+            className="absolute inset-0 opacity-[0.12] mix-blend-overlay"
+            style={{
+              backgroundImage:
+                "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E\")",
+            }}
+          />
+        </div>
+
+        <div className="container-page relative w-full pt-28 pb-14 md:pt-36 md:pb-20 lg:pb-24">
+          <div className="max-w-2xl lg:max-w-3xl">
+            <div className="eyebrow text-primary-foreground/70 rule-ochre animate-[hero-rise_0.7s_ease-out_both]">
               {hero?.eyebrow ?? "Gojo Solutions PLC · Addis Ababa"}
             </div>
-            <h1 className="mt-6 font-display text-4xl sm:text-5xl md:text-6xl leading-[1.05] text-foreground">
+            <h1 className="mt-5 md:mt-6 font-display text-[2.35rem] sm:text-5xl md:text-6xl lg:text-[4.25rem] leading-[1.02] tracking-tight text-balance animate-[hero-rise_0.8s_ease-out_0.08s_both]">
               {heroHeading.includes("infrastructure") ? (
                 <>
                   {heroHeading.split("infrastructure")[0]}
-                  <span className="text-forest-deep">infrastructure</span>
+                  <span className="text-accent">infrastructure</span>
                   {heroHeading.split("infrastructure")[1]}
                 </>
               ) : (
                 heroHeading
               )}
             </h1>
-            <p className="mt-6 text-lg text-muted-foreground max-w-xl leading-relaxed">
+            <p className="mt-5 md:mt-6 text-base md:text-lg text-primary-foreground/80 max-w-xl leading-relaxed animate-[hero-rise_0.8s_ease-out_0.16s_both]">
               {hero?.body ?? company.positioning}
             </p>
-            <div className="mt-8 flex flex-wrap gap-3">
+            <div className="mt-8 flex flex-wrap gap-3 animate-[hero-rise_0.8s_ease-out_0.24s_both]">
               <a
                 href={hero?.ctaHref || company.shopUrl}
                 target="_blank"
                 rel="noreferrer"
-                className="inline-flex items-center gap-2 rounded-sm bg-primary px-5 py-3 text-sm font-medium text-primary-foreground hover:bg-forest transition-colors"
+                className="inline-flex items-center gap-2 rounded-sm bg-accent px-5 py-3 text-sm font-medium text-accent-foreground hover:opacity-90 transition-opacity"
               >
                 {hero?.ctaLabel ?? "Visit Gojo Shop"} <span aria-hidden>↗</span>
               </a>
               <Link
                 to={(hero?.cta2Href as "/") || "/contact"}
-                className="inline-flex items-center gap-2 rounded-sm border border-primary/25 px-5 py-3 text-sm font-medium text-foreground hover:border-primary hover:bg-primary/5 transition-colors"
+                className="inline-flex items-center gap-2 rounded-sm border border-primary-foreground/30 bg-primary-foreground/5 px-5 py-3 text-sm font-medium text-primary-foreground hover:bg-primary-foreground/10 transition-colors backdrop-blur-sm"
               >
                 {hero?.cta2Label ?? "Partner with us"}
               </Link>
             </div>
           </div>
 
-          <figure className="relative">
-            <div className="aspect-[4/5] rounded-md overflow-hidden bg-gradient-to-br from-primary via-forest to-primary/85 relative">
-              <div
-                aria-hidden
-                className="absolute inset-0 opacity-20"
-                style={{
-                  backgroundImage:
-                    "radial-gradient(circle at 30% 30%, var(--ochre) 0%, transparent 45%)",
-                }}
-              />
-              <div className="absolute inset-0 p-8 flex flex-col justify-between text-primary-foreground">
-                <div className="eyebrow text-primary-foreground/70">
-                  {figure?.eyebrow ?? "The Gojo Promise"}
-                </div>
-                <div>
-                  {figureLines.map((line, i) => (
-                    <div
-                      key={i}
-                      className={`font-display text-3xl leading-tight ${
-                        i === 1
-                          ? "text-primary-foreground/85"
-                          : i === 2
-                            ? "text-primary-foreground/70"
-                            : ""
-                      }`}
-                    >
-                      {line}
-                    </div>
-                  ))}
-                </div>
+          {(figure?.eyebrow || figureLines.length > 0) && (
+            <div className="mt-12 md:mt-16 pt-6 border-t border-primary-foreground/15 max-w-3xl animate-[hero-rise_0.9s_ease-out_0.32s_both]">
+              <div className="eyebrow text-primary-foreground/55">
+                {figure?.eyebrow ?? "The Gojo Promise"}
               </div>
+              <p className="mt-2 font-display text-lg md:text-xl text-primary-foreground/85 leading-snug">
+                {figureLines.filter(Boolean).join(" · ")}
+              </p>
             </div>
-            <figcaption className="sr-only">
-              {figure?.body ?? "The three pillars of the Gojo Promise."}
-            </figcaption>
-          </figure>
+          )}
         </div>
       </section>
 
@@ -238,9 +250,41 @@ function Home() {
               {hub?.ctaLabel ?? "Explore what we do →"}
             </Link>
           </div>
-          <HubSpokeDiagram capabilities={capabilities} />
+          {hub?.imagePath ? (
+            <img
+              src={hub.imagePath}
+              alt=""
+              className="w-full aspect-[4/3] rounded-md object-cover border border-border"
+            />
+          ) : (
+            <HubSpokeDiagram capabilities={capabilities} />
+          )}
         </div>
       </section>
+
+      {midBand?.imagePath && (
+        <section className="relative overflow-hidden border-y border-border/60">
+          <img
+            src={midBand.imagePath}
+            alt={midBand.heading || ""}
+            className="absolute inset-0 h-full w-full object-cover"
+          />
+          <div className="absolute inset-0 bg-primary/70" />
+          <div className="relative container-page py-20 md:py-28 text-primary-foreground max-w-3xl">
+            {midBand.eyebrow && (
+              <div className="eyebrow text-primary-foreground/70 rule-ochre">{midBand.eyebrow}</div>
+            )}
+            {midBand.heading && (
+              <h2 className="mt-4 font-display text-3xl md:text-4xl">{midBand.heading}</h2>
+            )}
+            {midBand.body && (
+              <p className="mt-4 text-primary-foreground/85 max-w-xl leading-relaxed">
+                {midBand.body}
+              </p>
+            )}
+          </div>
+        </section>
+      )}
 
       <section className="bg-secondary/60 border-y border-border/60">
         <div className="container-page py-20 md:py-24">
@@ -291,21 +335,28 @@ function Home() {
               {work?.body ??
                 "Whether you're a vendor, a logistics operator, a bank, or an international supplier — we're building the infrastructure alongside you."}
             </p>
+            <div className="mt-6 flex flex-wrap gap-3">
+              <Link
+                to={(work?.ctaHref as "/partnerships") || "/partnerships"}
+                className="inline-flex items-center rounded-sm bg-primary px-5 py-3 text-sm font-medium text-primary-foreground hover:bg-forest"
+              >
+                {work?.ctaLabel ?? "Partnerships"}
+              </Link>
+              <Link
+                to={(work?.cta2Href as "/contact") || "/contact"}
+                className="inline-flex items-center rounded-sm border border-primary/30 px-5 py-3 text-sm font-medium text-foreground hover:bg-primary/5"
+              >
+                {work?.cta2Label ?? "Contact us"}
+              </Link>
+            </div>
           </div>
-          <div className="flex flex-wrap gap-3 md:justify-end">
-            <Link
-              to={(work?.ctaHref as "/partnerships") || "/partnerships"}
-              className="inline-flex items-center rounded-sm bg-primary px-5 py-3 text-sm font-medium text-primary-foreground hover:bg-forest"
-            >
-              {work?.ctaLabel ?? "Partnerships"}
-            </Link>
-            <Link
-              to={(work?.cta2Href as "/contact") || "/contact"}
-              className="inline-flex items-center rounded-sm border border-primary/30 px-5 py-3 text-sm font-medium text-foreground hover:bg-primary/5"
-            >
-              {work?.cta2Label ?? "Contact us"}
-            </Link>
-          </div>
+          {work?.imagePath && (
+            <img
+              src={work.imagePath}
+              alt=""
+              className="w-full aspect-[4/3] rounded-md object-cover border border-border"
+            />
+          )}
         </div>
 
         <div className="mt-16">
@@ -322,6 +373,13 @@ function Home() {
                   aria-hidden
                   className="absolute inset-y-0 left-0 w-0 bg-accent transition-all duration-300 group-hover:w-1"
                 />
+                {c.cardImagePath && (
+                  <img
+                    src={c.cardImagePath}
+                    alt=""
+                    className="mb-4 h-28 w-full rounded-sm object-cover border border-border/60"
+                  />
+                )}
                 <div className="font-display text-lg leading-snug transition-colors duration-300 group-hover:text-primary">
                   {c.title}
                 </div>

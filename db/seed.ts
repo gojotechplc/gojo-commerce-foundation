@@ -226,6 +226,12 @@ export async function runSeed(opts: { force?: boolean } = {}) {
       ctaHref: "/what-we-do",
     },
     {
+      sectionKey: "mid_band",
+      eyebrow: "On the ground",
+      heading: "Commerce infrastructure, built where it runs.",
+      body: "Optional mid-page photo band between structure and the Gojo Promise.",
+    },
+    {
       sectionKey: "promise_section",
       eyebrow: "The Gojo Promise",
       heading: "A promise, held together by three commitments.",
@@ -357,6 +363,8 @@ export async function runSeed(opts: { force?: boolean } = {}) {
       stat4Value: "Ethiopia",
       workflowEyebrow: "Inside the platform",
       workflowHeading: "How Gojo Shop works, end to end.",
+      galleryEyebrow: "Gallery",
+      galleryHeading: "A closer look at Gojo Shop.",
       promiseEyebrow: "The Gojo Promise, on the platform",
       promiseHeading: "What every Gojo Shop transaction is engineered to guarantee.",
     })

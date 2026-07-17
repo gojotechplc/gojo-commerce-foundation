@@ -1,6 +1,8 @@
 import { createFileRoute, useRouter } from "@tanstack/react-router";
 import { useState } from "react";
 import {
+  clearPartnerLogoFn,
+  clearPartnershipsHeroFn,
   createPartnerTypeFn,
   createStandardFn,
   createVendorPropFn,
@@ -16,6 +18,7 @@ import {
   updateStandardFn,
   updateVendorPropFn,
   uploadPartnerLogoFn,
+  uploadPartnershipsHeroFn,
 } from "@/lib/admin.server";
 import {
   AdminPageHeader,
@@ -55,8 +58,63 @@ function PartnershipsAdmin() {
 
   return (
     <div className="space-y-10">
-      <AdminPageHeader title="Partnerships page" />
+      <AdminPageHeader
+        title="Partnerships page"
+        description="Keep imagery sparse: one hero photo plus partner logos. Standards stay text-only."
+      />
       <StatusBanner message={msg} />
+
+      <section className="rounded-md border border-border p-4 space-y-3">
+        <h2 className="font-display text-xl">Hero image</h2>
+        <p className="text-xs text-muted-foreground">
+          Real partnership / logistics photo beside the page headline. Prefer documentary shots over
+          stock handshakes.
+        </p>
+        {page?.heroImagePath ? (
+          <img
+            src={page.heroImagePath}
+            alt=""
+            className="max-h-56 w-full max-w-md object-cover rounded-sm border"
+          />
+        ) : (
+          <p className="text-sm text-muted-foreground">No hero image yet (gradient placeholder on site).</p>
+        )}
+        <div className="flex flex-wrap gap-3 text-xs items-center">
+          <label className="inline-flex items-center gap-1 cursor-pointer text-primary">
+            <span>{page?.heroImagePath ? "Replace hero image" : "Upload hero image"}</span>
+            <input
+              type="file"
+              accept="image/*"
+              className="hidden"
+              onChange={async (e) => {
+                const file = e.target.files?.[0];
+                if (!file) return;
+                const fd = new FormData();
+                fd.set("file", file);
+                await uploadPartnershipsHeroFn({ data: fd });
+                setMsg("Hero image updated.");
+                await router.invalidate();
+                e.target.value = "";
+              }}
+            />
+          </label>
+          {page?.heroImagePath && (
+            <button
+              type="button"
+              className="text-destructive"
+              onClick={async () => {
+                if (!confirm("Remove hero image?")) return;
+                await clearPartnershipsHeroFn();
+                setMsg("Hero image removed.");
+                await router.invalidate();
+              }}
+            >
+              Remove image
+            </button>
+          )}
+        </div>
+      </section>
+
       <form
         className="space-y-3"
         onSubmit={async (e) => {
@@ -219,31 +277,53 @@ function PartnershipsAdmin() {
                   }}
                 />
                 {p.logoPath && <img src={p.logoPath} alt="" className="h-10 object-contain" />}
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={async (e) => {
-                    const file = e.target.files?.[0];
-                    if (!file) return;
-                    const fd = new FormData();
-                    fd.set("id", String(p.id));
-                    fd.set("file", file);
-                    await uploadPartnerLogoFn({ data: fd });
-                    await router.invalidate();
-                  }}
-                />
-                <button
-                  type="button"
-                  className="text-xs text-destructive"
-                  onClick={async () => {
-                    if (confirm("Delete?")) {
-                      await deletePartnerTypeFn({ data: { id: p.id } });
-                      await router.invalidate();
-                    }
-                  }}
-                >
-                  Delete
-                </button>
+                <div className="flex flex-wrap gap-3 text-xs items-center">
+                  <label className="inline-flex items-center gap-1 cursor-pointer text-primary">
+                    <span>{p.logoPath ? "Replace logo" : "Upload logo"}</span>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      className="hidden"
+                      onChange={async (e) => {
+                        const file = e.target.files?.[0];
+                        if (!file) return;
+                        const fd = new FormData();
+                        fd.set("id", String(p.id));
+                        fd.set("file", file);
+                        await uploadPartnerLogoFn({ data: fd });
+                        setMsg("Partner logo updated.");
+                        await router.invalidate();
+                        e.target.value = "";
+                      }}
+                    />
+                  </label>
+                  {p.logoPath && (
+                    <button
+                      type="button"
+                      className="text-destructive"
+                      onClick={async () => {
+                        if (!confirm("Remove this logo?")) return;
+                        await clearPartnerLogoFn({ data: { id: p.id } });
+                        setMsg("Partner logo removed.");
+                        await router.invalidate();
+                      }}
+                    >
+                      Remove logo
+                    </button>
+                  )}
+                  <button
+                    type="button"
+                    className="text-destructive"
+                    onClick={async () => {
+                      if (confirm("Delete partner type?")) {
+                        await deletePartnerTypeFn({ data: { id: p.id } });
+                        await router.invalidate();
+                      }
+                    }}
+                  >
+                    Delete
+                  </button>
+                </div>
               </div>
             );
           }}

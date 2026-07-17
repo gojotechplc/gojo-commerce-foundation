@@ -178,6 +178,7 @@ CREATE TABLE IF NOT EXISTS home_sections (
   cta_href TEXT,
   cta2_label TEXT,
   cta2_href TEXT,
+  image_path TEXT,
   updated_at TEXT NOT NULL DEFAULT (datetime('now'))
 );
 
@@ -209,6 +210,8 @@ CREATE TABLE IF NOT EXISTS gojo_shop_page (
   stat4_value TEXT NOT NULL,
   workflow_eyebrow TEXT NOT NULL,
   workflow_heading TEXT NOT NULL,
+  gallery_eyebrow TEXT NOT NULL DEFAULT 'Gallery',
+  gallery_heading TEXT NOT NULL DEFAULT 'A closer look at Gojo Shop.',
   promise_eyebrow TEXT NOT NULL,
   promise_heading TEXT NOT NULL,
   updated_at TEXT NOT NULL DEFAULT (datetime('now'))
@@ -224,11 +227,22 @@ CREATE TABLE IF NOT EXISTS gojo_shop_workflow_images (
   updated_at TEXT NOT NULL DEFAULT (datetime('now'))
 );
 
+CREATE TABLE IF NOT EXISTS gojo_shop_gallery (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  title TEXT NOT NULL DEFAULT '',
+  caption TEXT,
+  image_path TEXT NOT NULL,
+  sort_order INTEGER NOT NULL,
+  is_visible INTEGER NOT NULL DEFAULT 1,
+  updated_at TEXT NOT NULL DEFAULT (datetime('now'))
+);
+
 CREATE TABLE IF NOT EXISTS partnerships_page (
   id INTEGER PRIMARY KEY,
   header_eyebrow TEXT NOT NULL,
   header_heading TEXT NOT NULL,
   header_body TEXT NOT NULL,
+  hero_image_path TEXT,
   vendor_section_eyebrow TEXT,
   vendor_section_heading TEXT,
   standards_eyebrow TEXT NOT NULL,
@@ -353,6 +367,9 @@ export function getSqlite(): Database {
   migrateCapabilitiesColumns(sqlite);
   migrateContactMessagesColumns(sqlite);
   migrateContactPageColumns(sqlite);
+  migrateHomeSectionsColumns(sqlite);
+  migrateGojoShopColumns(sqlite);
+  migratePartnershipsColumns(sqlite);
   return sqlite;
 }
 
@@ -415,6 +432,90 @@ function migrateContactPageColumns(db: Database) {
   db.exec(
     `UPDATE contact_page SET phone_number = '+251982808182' WHERE phone_number IS NULL OR trim(phone_number) = ''`,
   );
+}
+
+function migrateHomeSectionsColumns(db: Database) {
+  const exists = db
+    .query("SELECT name FROM sqlite_master WHERE type='table' AND name='home_sections'")
+    .get();
+  if (!exists) return;
+  const cols = new Set(
+    db
+      .query("PRAGMA table_info(home_sections)")
+      .all()
+      .map((r) => (r as { name: string }).name),
+  );
+  if (!cols.has("image_path")) {
+    db.exec(`ALTER TABLE home_sections ADD COLUMN image_path TEXT`);
+  }
+}
+
+function migrateGojoShopColumns(db: Database) {
+  const pageExists = db
+    .query("SELECT name FROM sqlite_master WHERE type='table' AND name='gojo_shop_page'")
+    .get();
+  if (pageExists) {
+    const cols = new Set(
+      db
+        .query("PRAGMA table_info(gojo_shop_page)")
+        .all()
+        .map((r) => (r as { name: string }).name),
+    );
+    if (!cols.has("gallery_eyebrow")) {
+      db.exec(
+        `ALTER TABLE gojo_shop_page ADD COLUMN gallery_eyebrow TEXT NOT NULL DEFAULT 'Gallery'`,
+      );
+    }
+    if (!cols.has("gallery_heading")) {
+      db.exec(
+        `ALTER TABLE gojo_shop_page ADD COLUMN gallery_heading TEXT NOT NULL DEFAULT 'A closer look at Gojo Shop.'`,
+      );
+    }
+  }
+  db.exec(`
+CREATE TABLE IF NOT EXISTS gojo_shop_gallery (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  title TEXT NOT NULL DEFAULT '',
+  caption TEXT,
+  image_path TEXT NOT NULL,
+  sort_order INTEGER NOT NULL,
+  is_visible INTEGER NOT NULL DEFAULT 1,
+  updated_at TEXT NOT NULL DEFAULT (datetime('now'))
+);
+`);
+
+  // Ensure mid_band home section exists for existing DBs
+  const mid = db
+    .query(`SELECT id FROM home_sections WHERE section_key = 'mid_band'`)
+    .get();
+  if (!mid) {
+    db.exec(`
+INSERT INTO home_sections (section_key, eyebrow, heading, body, updated_at)
+VALUES (
+  'mid_band',
+  'On the ground',
+  'Commerce infrastructure, built where it runs.',
+  'Optional mid-page photo band between structure and the Gojo Promise.',
+  datetime('now')
+);
+`);
+  }
+}
+
+function migratePartnershipsColumns(db: Database) {
+  const exists = db
+    .query("SELECT name FROM sqlite_master WHERE type='table' AND name='partnerships_page'")
+    .get();
+  if (!exists) return;
+  const cols = new Set(
+    db
+      .query("PRAGMA table_info(partnerships_page)")
+      .all()
+      .map((r) => (r as { name: string }).name),
+  );
+  if (!cols.has("hero_image_path")) {
+    db.exec(`ALTER TABLE partnerships_page ADD COLUMN hero_image_path TEXT`);
+  }
 }
 
 export function getDb() {

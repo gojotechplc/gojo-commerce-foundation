@@ -163,6 +163,7 @@ export const homeSections = sqliteTable("home_sections", {
   ctaHref: text("cta_href"),
   cta2Label: text("cta2_label"),
   cta2Href: text("cta2_href"),
+  imagePath: text("image_path"),
   updatedAt: text("updated_at").notNull().$defaultFn(now),
 });
 
@@ -194,6 +195,10 @@ export const gojoShopPage = sqliteTable("gojo_shop_page", {
   stat4Value: text("stat4_value").notNull(),
   workflowEyebrow: text("workflow_eyebrow").notNull(),
   workflowHeading: text("workflow_heading").notNull(),
+  galleryEyebrow: text("gallery_eyebrow").notNull().default("Gallery"),
+  galleryHeading: text("gallery_heading")
+    .notNull()
+    .default("A closer look at Gojo Shop."),
   promiseEyebrow: text("promise_eyebrow").notNull(),
   promiseHeading: text("promise_heading").notNull(),
   updatedAt: text("updated_at").notNull().$defaultFn(now),
@@ -209,11 +214,23 @@ export const gojoShopWorkflowImages = sqliteTable("gojo_shop_workflow_images", {
   updatedAt: text("updated_at").notNull().$defaultFn(now),
 });
 
+/** Extra Gojo Shop gallery images (paginated + lightbox on public page). */
+export const gojoShopGallery = sqliteTable("gojo_shop_gallery", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  title: text("title").notNull().default(""),
+  caption: text("caption"),
+  imagePath: text("image_path").notNull(),
+  sortOrder: integer("sort_order").notNull(),
+  isVisible: integer("is_visible").notNull().default(1),
+  updatedAt: text("updated_at").notNull().$defaultFn(now),
+});
+
 export const partnershipsPage = sqliteTable("partnerships_page", {
   id: integer("id").primaryKey(),
   headerEyebrow: text("header_eyebrow").notNull(),
   headerHeading: text("header_heading").notNull(),
   headerBody: text("header_body").notNull(),
+  heroImagePath: text("hero_image_path"),
   vendorSectionEyebrow: text("vendor_section_eyebrow"),
   vendorSectionHeading: text("vendor_section_heading"),
   standardsEyebrow: text("standards_eyebrow").notNull(),
@@ -326,6 +343,7 @@ export const schema = {
   pageMeta,
   gojoShopPage,
   gojoShopWorkflowImages,
+  gojoShopGallery,
   partnershipsPage,
   vendorValueProps,
   partnershipStandards,

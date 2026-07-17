@@ -22,6 +22,7 @@ import {
   globalMeta,
   gojoShopPage,
   gojoShopWorkflowImages,
+  gojoShopGallery,
   homeSections,
   logo,
   navLinks,
@@ -421,6 +422,7 @@ export const updateHomeSectionFn = createServerFn({ method: "POST" })
       ctaHref?: string | null;
       cta2Label?: string | null;
       cta2Href?: string | null;
+      imagePath?: string | null;
     }) => d,
   )
   .handler(async ({ data }) => {
@@ -430,6 +432,48 @@ export const updateHomeSectionFn = createServerFn({ method: "POST" })
       .update(homeSections)
       .set({ ...rest, updatedAt: now() })
       .where(eq(homeSections.sectionKey, sectionKey))
+      .run();
+    return { ok: true as const };
+  });
+
+export const uploadHomeSectionImageFn = createServerFn({ method: "POST" })
+  .inputValidator((d: FormData) => d)
+  .handler(async ({ data }) => {
+    await guard();
+    const file = data.get("file");
+    const sectionKey = String(data.get("sectionKey") || "");
+    if (!(file instanceof File)) throw new Error("Missing file");
+    if (!sectionKey) throw new Error("Missing section");
+    const db = getDb();
+    const row = db
+      .select()
+      .from(homeSections)
+      .where(eq(homeSections.sectionKey, sectionKey))
+      .get();
+    if (!row) throw new Error("Section not found");
+    if (row.imagePath) deleteUploadByPublicPath(row.imagePath);
+    const saved = await saveUpload(file, "general", `home-${sectionKey}`);
+    db.update(homeSections)
+      .set({ imagePath: saved.path, updatedAt: now() })
+      .where(eq(homeSections.sectionKey, sectionKey))
+      .run();
+    return { ok: true as const, path: saved.path };
+  });
+
+export const clearHomeSectionImageFn = createServerFn({ method: "POST" })
+  .inputValidator((d: { sectionKey: string }) => d)
+  .handler(async ({ data }) => {
+    await guard();
+    const db = getDb();
+    const row = db
+      .select()
+      .from(homeSections)
+      .where(eq(homeSections.sectionKey, data.sectionKey))
+      .get();
+    if (row?.imagePath) deleteUploadByPublicPath(row.imagePath);
+    db.update(homeSections)
+      .set({ imagePath: null, updatedAt: now() })
+      .where(eq(homeSections.sectionKey, data.sectionKey))
       .run();
     return { ok: true as const };
   });
@@ -935,6 +979,11 @@ export const getGojoShopAdminFn = createServerFn({ method: "GET" }).handler(asyn
       .from(gojoShopWorkflowImages)
       .orderBy(asc(gojoShopWorkflowImages.sortOrder))
       .all(),
+    gallery: db
+      .select()
+      .from(gojoShopGallery)
+      .orderBy(asc(gojoShopGallery.sortOrder))
+      .all(),
   };
 });
 
@@ -1000,6 +1049,25 @@ export const uploadWorkflowImageFn = createServerFn({ method: "POST" })
     return { ok: true as const, path: saved.path };
   });
 
+export const clearWorkflowImageFn = createServerFn({ method: "POST" })
+  .inputValidator((d: { id: number }) => d)
+  .handler(async ({ data }) => {
+    await guard();
+    const row = getDb()
+      .select()
+      .from(gojoShopWorkflowImages)
+      .where(eq(gojoShopWorkflowImages.id, data.id))
+      .get();
+    if (!row) throw new Error("Not found");
+    if (row.imagePath) deleteUploadByPublicPath(row.imagePath);
+    getDb()
+      .update(gojoShopWorkflowImages)
+      .set({ imagePath: null, updatedAt: now() })
+      .where(eq(gojoShopWorkflowImages.id, data.id))
+      .run();
+    return { ok: true as const };
+  });
+
 export const reorderWorkflowFn = createServerFn({ method: "POST" })
   .inputValidator((d: { ids: number[] }) => d)
   .handler(async ({ data }) => {
@@ -1025,6 +1093,93 @@ export const deleteWorkflowFn = createServerFn({ method: "POST" })
       .get();
     if (row?.imagePath) deleteUploadByPublicPath(row.imagePath);
     getDb().delete(gojoShopWorkflowImages).where(eq(gojoShopWorkflowImages.id, data.id)).run();
+    return { ok: true as const };
+  });
+
+// ─── Gojo Shop gallery ──────────────────────────────────────────────────────
+
+export const createGalleryImageFn = createServerFn({ method: "POST" })
+  .inputValidator((d: FormData) => d)
+  .handler(async ({ data }) => {
+    await guard();
+    const file = data.get("file");
+    if (!(file instanceof File)) throw new Error("Missing file");
+    const title = String(data.get("title") || "").trim();
+    const caption = String(data.get("caption") || "").trim() || null;
+    const saved = await saveUpload(file, "gojo-shop", "gallery");
+    const max = getDb().select().from(gojoShopGallery).all().length;
+    getDb()
+      .insert(gojoShopGallery)
+      .values({
+        title,
+        caption,
+        imagePath: saved.path,
+        sortOrder: max,
+        isVisible: 1,
+      })
+      .run();
+    return { ok: true as const, path: saved.path };
+  });
+
+export const updateGalleryImageFn = createServerFn({ method: "POST" })
+  .inputValidator(
+    (d: { id: number; title: string; caption: string | null; isVisible: number }) => d,
+  )
+  .handler(async ({ data }) => {
+    await guard();
+    const { id, ...rest } = data;
+    getDb()
+      .update(gojoShopGallery)
+      .set({ ...rest, updatedAt: now() })
+      .where(eq(gojoShopGallery.id, id))
+      .run();
+    return { ok: true as const };
+  });
+
+export const replaceGalleryImageFn = createServerFn({ method: "POST" })
+  .inputValidator((d: FormData) => d)
+  .handler(async ({ data }) => {
+    await guard();
+    const id = Number(data.get("id"));
+    const file = data.get("file");
+    if (!(file instanceof File) || !id) throw new Error("Missing file or id");
+    const row = getDb().select().from(gojoShopGallery).where(eq(gojoShopGallery.id, id)).get();
+    if (!row) throw new Error("Not found");
+    deleteUploadByPublicPath(row.imagePath);
+    const saved = await saveUpload(file, "gojo-shop", "gallery");
+    getDb()
+      .update(gojoShopGallery)
+      .set({ imagePath: saved.path, updatedAt: now() })
+      .where(eq(gojoShopGallery.id, id))
+      .run();
+    return { ok: true as const, path: saved.path };
+  });
+
+export const reorderGalleryFn = createServerFn({ method: "POST" })
+  .inputValidator((d: { ids: number[] }) => d)
+  .handler(async ({ data }) => {
+    await guard();
+    data.ids.forEach((id, i) => {
+      getDb()
+        .update(gojoShopGallery)
+        .set({ sortOrder: i, updatedAt: now() })
+        .where(eq(gojoShopGallery.id, id))
+        .run();
+    });
+    return { ok: true as const };
+  });
+
+export const deleteGalleryImageFn = createServerFn({ method: "POST" })
+  .inputValidator((d: { id: number }) => d)
+  .handler(async ({ data }) => {
+    await guard();
+    const row = getDb()
+      .select()
+      .from(gojoShopGallery)
+      .where(eq(gojoShopGallery.id, data.id))
+      .get();
+    if (row?.imagePath) deleteUploadByPublicPath(row.imagePath);
+    getDb().delete(gojoShopGallery).where(eq(gojoShopGallery.id, data.id)).run();
     return { ok: true as const };
   });
 
@@ -1233,6 +1388,50 @@ export const uploadPartnerLogoFn = createServerFn({ method: "POST" })
       .run();
     return { ok: true as const, path: saved.path };
   });
+
+export const clearPartnerLogoFn = createServerFn({ method: "POST" })
+  .inputValidator((d: { id: number }) => d)
+  .handler(async ({ data }) => {
+    await guard();
+    const row = getDb().select().from(partnerTypes).where(eq(partnerTypes.id, data.id)).get();
+    if (!row) throw new Error("Not found");
+    if (row.logoPath) deleteUploadByPublicPath(row.logoPath);
+    getDb()
+      .update(partnerTypes)
+      .set({ logoPath: null, updatedAt: now() })
+      .where(eq(partnerTypes.id, data.id))
+      .run();
+    return { ok: true as const };
+  });
+
+export const uploadPartnershipsHeroFn = createServerFn({ method: "POST" })
+  .inputValidator((d: FormData) => d)
+  .handler(async ({ data }) => {
+    await guard();
+    const file = data.get("file");
+    if (!(file instanceof File)) throw new Error("Missing file");
+    const db = getDb();
+    const page = db.select().from(partnershipsPage).get();
+    if (page?.heroImagePath) deleteUploadByPublicPath(page.heroImagePath);
+    const saved = await saveUpload(file, "partners", "partnerships-hero");
+    db.update(partnershipsPage)
+      .set({ heroImagePath: saved.path, updatedAt: now() })
+      .where(eq(partnershipsPage.id, 1))
+      .run();
+    return { ok: true as const, path: saved.path };
+  });
+
+export const clearPartnershipsHeroFn = createServerFn({ method: "POST" }).handler(async () => {
+  await guard();
+  const db = getDb();
+  const page = db.select().from(partnershipsPage).get();
+  if (page?.heroImagePath) deleteUploadByPublicPath(page.heroImagePath);
+  db.update(partnershipsPage)
+    .set({ heroImagePath: null, updatedAt: now() })
+    .where(eq(partnershipsPage.id, 1))
+    .run();
+  return { ok: true as const };
+});
 
 export const reorderPartnerTypesFn = createServerFn({ method: "POST" })
   .inputValidator((d: { ids: number[] }) => d)

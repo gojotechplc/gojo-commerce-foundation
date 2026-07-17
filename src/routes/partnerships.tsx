@@ -27,17 +27,33 @@ function Partnerships() {
 
   return (
     <PageShell chrome={chrome}>
-      <section className="container-page pt-20 pb-12">
-        <div className="eyebrow rule-ochre">
-          {page?.headerEyebrow ?? "Partnerships & vendors"}
+      <section className="container-page pt-20 pb-12 grid gap-10 md:grid-cols-[1.15fr_0.85fr] items-center">
+        <div>
+          <div className="eyebrow rule-ochre">
+            {page?.headerEyebrow ?? "Partnerships & vendors"}
+          </div>
+          <h1 className="mt-5 font-display text-4xl md:text-6xl leading-[1.05] max-w-3xl">
+            {page?.headerHeading ?? "We build alongside partners who take trust seriously."}
+          </h1>
+          <p className="mt-6 text-lg text-muted-foreground max-w-2xl leading-relaxed">
+            {page?.headerBody ??
+              "Gojo Solutions works with vendors, banks, logistics operators, and international suppliers to build commerce infrastructure at national scale."}
+          </p>
         </div>
-        <h1 className="mt-5 font-display text-4xl md:text-6xl leading-[1.05] max-w-3xl">
-          {page?.headerHeading ?? "We build alongside partners who take trust seriously."}
-        </h1>
-        <p className="mt-6 text-lg text-muted-foreground max-w-2xl leading-relaxed">
-          {page?.headerBody ??
-            "Gojo Solutions works with vendors, banks, logistics operators, and international suppliers to build commerce infrastructure at national scale."}
-        </p>
+        {page?.heroImagePath ? (
+          <figure className="relative">
+            <img
+              src={page.heroImagePath}
+              alt=""
+              className="aspect-[4/5] w-full rounded-md object-cover border border-border"
+            />
+          </figure>
+        ) : (
+          <div
+            aria-hidden
+            className="aspect-[4/5] rounded-md bg-gradient-to-br from-primary via-forest to-primary/80 hidden md:block"
+          />
+        )}
       </section>
 
       <section className="container-page py-12">
@@ -102,7 +118,13 @@ function Partnerships() {
           {partners.map((p) => (
             <article key={p.id} className="rounded-md border border-border bg-card p-6">
               {p.logoPath && (
-                <img src={p.logoPath} alt="" className="h-8 mb-3 object-contain" />
+                <div className="mb-4 h-12 flex items-center">
+                  <img
+                    src={p.logoPath}
+                    alt=""
+                    className="max-h-10 max-w-[180px] object-contain"
+                  />
+                </div>
               )}
               <div className="font-display text-xl">{p.title}</div>
               {p.example && (

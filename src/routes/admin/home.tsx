@@ -1,6 +1,11 @@
 import { createFileRoute, useRouter } from "@tanstack/react-router";
 import { useState } from "react";
-import { getHomeSectionsFn, updateHomeSectionFn } from "@/lib/admin.server";
+import {
+  clearHomeSectionImageFn,
+  getHomeSectionsFn,
+  updateHomeSectionFn,
+  uploadHomeSectionImageFn,
+} from "@/lib/admin.server";
 import {
   AdminPageHeader,
   Field,
@@ -14,6 +19,7 @@ const KEYS = [
   "hero",
   "tagline_moment",
   "hub_spoke",
+  "mid_band",
   "promise_section",
   "audiences_section",
   "work_with_us",
@@ -22,6 +28,16 @@ const KEYS = [
   "promise_figure",
   "about_founders_header",
 ] as const;
+
+const SECTION_HINTS: Partial<Record<(typeof KEYS)[number], string>> = {
+  hero: "Full-bleed landscape hero. Upload a wide photo (16:9 or wider) — it becomes the background behind the headline.",
+  hub_spoke: "Structure section beside the hub diagram. Optional side image.",
+  mid_band: "Full-width photo band between Structure and the Gojo Promise.",
+  work_with_us: "Optional image beside the final CTA block.",
+  promise_figure: "Text overlay on the hero image panel.",
+};
+
+const IMAGE_SECTIONS = new Set(["hero", "hub_spoke", "mid_band", "work_with_us"]);
 
 export const Route = createFileRoute("/admin/home")({
   loader: () => getHomeSectionsFn(),
@@ -36,11 +52,11 @@ function HomeEditor() {
     <div>
       <AdminPageHeader
         title="Home page"
-        description="Edit each named home section. Save sections independently."
+        description="Edit home sections. Upload photos on hero, mid_band, hub_spoke, or work_with_us."
       />
       <div className="space-y-6">
         {KEYS.map((key) => (
-          <SectionForm key={key} sectionKey={key} initial={byKey[key]} />
+          <SectionForm key={key} sectionKey={key} initial={byKey[key]} hint={SECTION_HINTS[key]} />
         ))}
       </div>
     </div>
@@ -50,8 +66,10 @@ function HomeEditor() {
 function SectionForm({
   sectionKey,
   initial,
+  hint,
 }: {
   sectionKey: string;
+  hint?: string;
   initial?: {
     eyebrow: string | null;
     heading: string | null;
@@ -60,10 +78,11 @@ function SectionForm({
     ctaHref: string | null;
     cta2Label: string | null;
     cta2Href: string | null;
+    imagePath: string | null;
   };
 }) {
   const router = useRouter();
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(sectionKey === "hero");
   const [form, setForm] = useState({
     eyebrow: initial?.eyebrow ?? "",
     heading: initial?.heading ?? "",
@@ -73,8 +92,12 @@ function SectionForm({
     cta2Label: initial?.cta2Label ?? "",
     cta2Href: initial?.cta2Href ?? "",
   });
+  const [imagePath, setImagePath] = useState(initial?.imagePath ?? null);
   const [msg, setMsg] = useState<string | null>(null);
+  const [err, setErr] = useState<string | null>(null);
   const [pending, setPending] = useState(false);
+  const [imgPending, setImgPending] = useState(false);
+  const canHaveImage = IMAGE_SECTIONS.has(sectionKey);
 
   return (
     <div className="rounded-md border border-border">
@@ -92,6 +115,7 @@ function SectionForm({
             e.preventDefault();
             setPending(true);
             setMsg(null);
+            setErr(null);
             try {
               await updateHomeSectionFn({
                 data: {
@@ -107,12 +131,87 @@ function SectionForm({
               });
               setMsg("Saved.");
               await router.invalidate();
+            } catch (ex) {
+              setErr(ex instanceof Error ? ex.message : "Save failed");
             } finally {
               setPending(false);
             }
           }}
         >
+          {hint && <p className="text-xs text-muted-foreground">{hint}</p>}
           <StatusBanner message={msg} />
+          <StatusBanner message={err} tone="err" />
+
+          {canHaveImage && (
+            <div className="rounded-md border border-border bg-muted/20 p-3 space-y-3">
+              <div className="text-sm font-medium">Section image</div>
+              {imagePath ? (
+                <img
+                  src={imagePath}
+                  alt=""
+                  className="max-h-48 w-full object-cover rounded-sm border border-border"
+                />
+              ) : (
+                <p className="text-xs text-muted-foreground">
+                  No image yet
+                  {sectionKey === "hero"
+                    ? " — the site shows the green promise panel until you upload one."
+                    : "."}
+                </p>
+              )}
+              <input
+                type="file"
+                accept="image/png,image/jpeg,image/webp"
+                disabled={imgPending}
+                onChange={async (e) => {
+                  const file = e.target.files?.[0];
+                  if (!file) return;
+                  setImgPending(true);
+                  setMsg(null);
+                  setErr(null);
+                  try {
+                    const fd = new FormData();
+                    fd.set("file", file);
+                    fd.set("sectionKey", sectionKey);
+                    const res = await uploadHomeSectionImageFn({ data: fd });
+                    setImagePath(res.path);
+                    setMsg("Section image updated — refresh the public page to see it.");
+                    await router.invalidate();
+                  } catch (ex) {
+                    setErr(ex instanceof Error ? ex.message : "Upload failed");
+                  } finally {
+                    setImgPending(false);
+                    e.target.value = "";
+                  }
+                }}
+                className="block w-full text-sm"
+              />
+              {imagePath && (
+                <button
+                  type="button"
+                  className="text-xs text-destructive"
+                  disabled={imgPending}
+                  onClick={async () => {
+                    if (!confirm("Remove section image?")) return;
+                    setImgPending(true);
+                    try {
+                      await clearHomeSectionImageFn({ data: { sectionKey } });
+                      setImagePath(null);
+                      setMsg("Section image removed.");
+                      await router.invalidate();
+                    } catch (ex) {
+                      setErr(ex instanceof Error ? ex.message : "Failed");
+                    } finally {
+                      setImgPending(false);
+                    }
+                  }}
+                >
+                  Remove image
+                </button>
+              )}
+            </div>
+          )}
+
           {(
             [
               ["eyebrow", "Eyebrow"],

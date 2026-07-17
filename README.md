@@ -77,11 +77,16 @@ Optional env vars:
 
 ## Admin CMS
 
-All visible site content is editable at `/admin`:
+All visible site content is editable at `/admin`.
+
+For a full walkthrough of **what to edit where** (pages, images, messages, partnerships), see **[SITE_MANUAL.md](./SITE_MANUAL.md)**.
+
+Quick map:
 
 - Company info, logo, navigation, SEO meta
 - Home / About / What We Do / Gojo Shop / Partnerships / Contact
 - Capabilities, Promise, Audiences, Founders
+- Messages inbox (contact form submissions)
 - Media library (files under `public/uploads/`)
 - Admin password
 

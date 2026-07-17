@@ -1,31 +1,89 @@
 import { Link, useRouterState } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { getUnreadMessageCountFn, logoutAdminFn } from "@/lib/admin.server";
 
-const links = [
-  { to: "/admin", label: "Dashboard", exact: true },
-  { to: "/admin/messages", label: "Messages", badge: true },
-  { to: "/admin/company", label: "Company" },
-  { to: "/admin/logo", label: "Logo" },
-  { to: "/admin/navigation", label: "Navigation" },
-  { to: "/admin/meta", label: "SEO / Meta" },
-  { to: "/admin/home", label: "Home" },
-  { to: "/admin/about", label: "About" },
-  { to: "/admin/founders", label: "Founders" },
-  { to: "/admin/capabilities", label: "Capabilities" },
-  { to: "/admin/promise", label: "Promise" },
-  { to: "/admin/audiences", label: "Audiences" },
-  { to: "/admin/gojo-shop", label: "Gojo Shop" },
-  { to: "/admin/what-we-do", label: "What We Do" },
-  { to: "/admin/partnerships", label: "Partnerships" },
-  { to: "/admin/contact", label: "Contact" },
-  { to: "/admin/media", label: "Media" },
-  { to: "/admin/settings", label: "Settings" },
-] as const;
+type NavLink = {
+  to: string;
+  label: string;
+  exact?: boolean;
+  badge?: boolean;
+};
+
+type NavGroup = {
+  id: string;
+  label: string;
+  links: NavLink[];
+};
+
+const groups: NavGroup[] = [
+  {
+    id: "inbox",
+    label: "Inbox",
+    links: [{ to: "/admin/messages", label: "Messages", badge: true }],
+  },
+  {
+    id: "brand",
+    label: "Brand & site",
+    links: [
+      { to: "/admin/company", label: "Company" },
+      { to: "/admin/logo", label: "Logo" },
+      { to: "/admin/navigation", label: "Navigation" },
+      { to: "/admin/meta", label: "SEO / Meta" },
+      { to: "/admin/media", label: "Media" },
+    ],
+  },
+  {
+    id: "pages",
+    label: "Pages",
+    links: [
+      { to: "/admin/home", label: "Home" },
+      { to: "/admin/about", label: "About" },
+      { to: "/admin/what-we-do", label: "What We Do" },
+      { to: "/admin/capabilities", label: "Capabilities" },
+      { to: "/admin/gojo-shop", label: "Gojo Shop" },
+      { to: "/admin/partnerships", label: "Partnerships" },
+      { to: "/admin/contact", label: "Contact" },
+    ],
+  },
+  {
+    id: "content",
+    label: "Shared content",
+    links: [
+      { to: "/admin/founders", label: "Founders" },
+      { to: "/admin/promise", label: "Promise" },
+      { to: "/admin/audiences", label: "Audiences" },
+    ],
+  },
+  {
+    id: "account",
+    label: "Account",
+    links: [{ to: "/admin/settings", label: "Settings" }],
+  },
+];
+
+function linkIsActive(pathname: string, link: NavLink) {
+  if (link.exact) return pathname === link.to;
+  return pathname === link.to || pathname.startsWith(link.to + "/");
+}
+
+function groupContainsActive(pathname: string, group: NavGroup) {
+  return group.links.some((l) => linkIsActive(pathname, l));
+}
 
 export function AdminSidebar() {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const [unread, setUnread] = useState(0);
+  const activeGroupId = useMemo(
+    () => groups.find((g) => groupContainsActive(pathname, g))?.id ?? null,
+    [pathname],
+  );
+  // Collapsed by default; only the group for the current page stays open
+  const [open, setOpen] = useState<Record<string, boolean>>({});
+
+  useEffect(() => {
+    if (!activeGroupId) return;
+    setOpen((prev) => ({ ...prev, [activeGroupId]: true }));
+  }, [activeGroupId]);
 
   useEffect(() => {
     let cancelled = false;
@@ -46,58 +104,104 @@ export function AdminSidebar() {
     };
   }, [pathname]);
 
+  const dashActive = pathname === "/admin" || pathname === "/admin/";
+
   return (
-    <aside className="sticky top-0 h-screen w-56 shrink-0 border-r border-border bg-secondary/40 flex flex-col">
-      <div className="shrink-0 px-4 py-5 border-b border-border">
-        <div className="font-display text-lg">Gojo Admin</div>
-        <div className="text-xs text-muted-foreground mt-0.5">Content CMS</div>
+    <aside className="sticky top-0 h-screen w-60 shrink-0 flex flex-col border-r border-primary/20 bg-primary text-primary-foreground">
+      <div className="shrink-0 px-4 py-5 border-b border-primary-foreground/15">
+        <div className="font-display text-lg tracking-tight">Gojo Admin</div>
+        <div className="text-xs text-primary-foreground/60 mt-0.5">Content CMS</div>
       </div>
 
-      <nav className="flex-1 min-h-0 overflow-y-auto py-3 px-2 space-y-0.5">
-        {links.map((l) => {
-          const active = l.exact
-            ? pathname === l.to
-            : pathname === l.to || pathname.startsWith(l.to + "/");
-          const showBadge = "badge" in l && l.badge && unread > 0;
+      <nav className="flex-1 min-h-0 overflow-y-auto py-3 px-2 space-y-3">
+        <Link
+          to="/admin"
+          className={`flex items-center rounded-sm px-3 py-2.5 text-sm font-medium transition-colors ${
+            dashActive
+              ? "bg-accent text-accent-foreground"
+              : "bg-primary-foreground/10 text-primary-foreground hover:bg-primary-foreground/15"
+          }`}
+        >
+          Dashboard
+        </Link>
+
+        <div className="h-px bg-primary-foreground/10 mx-1" />
+
+        {groups.map((group) => {
+          const isOpen = open[group.id] ?? false;
+          const hasActive = group.id === activeGroupId;
           return (
-            <Link
-              key={l.to}
-              to={l.to}
-              className={`flex items-center justify-between gap-2 rounded-sm px-3 py-2 text-sm transition-colors ${
-                active
-                  ? "bg-primary text-primary-foreground"
-                  : "text-foreground/80 hover:bg-muted"
-              }`}
-            >
-              <span>{l.label}</span>
-              {showBadge && (
+            <div key={group.id} className="space-y-0.5">
+              <button
+                type="button"
+                className={`w-full flex items-center justify-between rounded-sm px-3 py-2 text-[11px] font-medium uppercase tracking-wide transition-colors ${
+                  hasActive
+                    ? "text-accent"
+                    : "text-primary-foreground/55 hover:text-primary-foreground/85 hover:bg-primary-foreground/5"
+                }`}
+                onClick={() =>
+                  setOpen((prev) => ({ ...prev, [group.id]: !isOpen }))
+                }
+                aria-expanded={isOpen}
+              >
+                <span>{group.label}</span>
                 <span
-                  className={`min-w-5 h-5 px-1.5 rounded-sm text-[11px] font-medium inline-flex items-center justify-center ${
-                    active
-                      ? "bg-primary-foreground/20 text-primary-foreground"
-                      : "bg-accent text-accent-foreground"
-                  }`}
+                  aria-hidden
+                  className={`text-[10px] transition-transform ${isOpen ? "rotate-0" : "-rotate-90"}`}
                 >
-                  {unread > 99 ? "99+" : unread}
+                  ▾
                 </span>
+              </button>
+
+              {isOpen && (
+                <div className="space-y-0.5 pl-1">
+                  {group.links.map((l) => {
+                    const active = linkIsActive(pathname, l);
+                    const showBadge = l.badge && unread > 0;
+                    return (
+                      <Link
+                        key={l.to}
+                        to={l.to}
+                        className={`flex items-center justify-between gap-2 rounded-sm px-3 py-2 text-sm transition-colors ${
+                          active
+                            ? "bg-accent text-accent-foreground"
+                            : "text-primary-foreground/80 hover:bg-primary-foreground/10 hover:text-primary-foreground"
+                        }`}
+                      >
+                        <span>{l.label}</span>
+                        {showBadge && (
+                          <span
+                            className={`min-w-5 h-5 px-1.5 rounded-sm text-[11px] font-medium inline-flex items-center justify-center ${
+                              active
+                                ? "bg-accent-foreground/15 text-accent-foreground"
+                                : "bg-accent text-accent-foreground"
+                            }`}
+                          >
+                            {unread > 99 ? "99+" : unread}
+                          </span>
+                        )}
+                      </Link>
+                    );
+                  })}
+                </div>
               )}
-            </Link>
+            </div>
           );
         })}
       </nav>
 
-      <div className="shrink-0 p-3 border-t border-border bg-secondary/40 space-y-1">
+      <div className="shrink-0 p-3 border-t border-primary-foreground/15 space-y-1">
         <a
           href="/"
           target="_blank"
           rel="noreferrer"
-          className="block rounded-sm px-3 py-2 text-sm text-primary hover:bg-muted"
+          className="block rounded-sm px-3 py-2 text-sm text-accent hover:bg-primary-foreground/10"
         >
           View site ↗
         </a>
         <button
           type="button"
-          className="w-full rounded-sm px-3 py-2 text-left text-sm text-muted-foreground hover:bg-muted hover:text-foreground"
+          className="w-full rounded-sm px-3 py-2 text-left text-sm text-primary-foreground/65 hover:bg-primary-foreground/10 hover:text-primary-foreground"
           onClick={async () => {
             await logoutAdminFn();
             window.location.href = "/admin/login";
