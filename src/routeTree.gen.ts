@@ -10,12 +10,18 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as WhatWeDoRouteImport } from './routes/what-we-do'
+import { Route as GojoShopRouteImport } from './routes/gojo-shop'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
 
 const WhatWeDoRoute = WhatWeDoRouteImport.update({
   id: '/what-we-do',
   path: '/what-we-do',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const GojoShopRoute = GojoShopRouteImport.update({
+  id: '/gojo-shop',
+  path: '/gojo-shop',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AboutRoute = AboutRouteImport.update({
@@ -32,30 +38,34 @@ const IndexRoute = IndexRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/gojo-shop': typeof GojoShopRoute
   '/what-we-do': typeof WhatWeDoRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/gojo-shop': typeof GojoShopRoute
   '/what-we-do': typeof WhatWeDoRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/gojo-shop': typeof GojoShopRoute
   '/what-we-do': typeof WhatWeDoRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/about' | '/what-we-do'
+  fullPaths: '/' | '/about' | '/gojo-shop' | '/what-we-do'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/about' | '/what-we-do'
-  id: '__root__' | '/' | '/about' | '/what-we-do'
+  to: '/' | '/about' | '/gojo-shop' | '/what-we-do'
+  id: '__root__' | '/' | '/about' | '/gojo-shop' | '/what-we-do'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
+  GojoShopRoute: typeof GojoShopRoute
   WhatWeDoRoute: typeof WhatWeDoRoute
 }
 
@@ -66,6 +76,13 @@ declare module '@tanstack/react-router' {
       path: '/what-we-do'
       fullPath: '/what-we-do'
       preLoaderRoute: typeof WhatWeDoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/gojo-shop': {
+      id: '/gojo-shop'
+      path: '/gojo-shop'
+      fullPath: '/gojo-shop'
+      preLoaderRoute: typeof GojoShopRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/about': {
@@ -88,6 +105,7 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
+  GojoShopRoute: GojoShopRoute,
   WhatWeDoRoute: WhatWeDoRoute,
 }
 export const routeTree = rootRouteImport
