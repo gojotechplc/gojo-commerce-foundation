@@ -39,7 +39,8 @@ function LogoPage() {
         className="mb-10 space-y-3 rounded-md border border-border p-4"
         onSubmit={async (e) => {
           e.preventDefault();
-          const fd = new FormData(e.currentTarget);
+          const form = e.currentTarget; // capture before any await — React nullifies currentTarget after async
+          const fd = new FormData(form);
           fd.set("variant", variant);
           fd.set("altText", altText);
           setMsg(null);
@@ -48,7 +49,7 @@ function LogoPage() {
             await createLogoFn({ data: fd });
             setMsg("Logo uploaded.");
             await router.invalidate();
-            e.currentTarget.reset();
+            form.reset();
           } catch (ex) {
             setErr(ex instanceof Error ? ex.message : "Upload failed");
           }
