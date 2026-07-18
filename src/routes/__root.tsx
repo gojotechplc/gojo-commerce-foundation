@@ -107,15 +107,14 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       ],
       links: [
         { rel: "stylesheet", href: appCss },
-        ...(m?.faviconPath
-          ? [
-              {
-                rel: "icon",
-                href: m.faviconPath,
-                type: m.faviconPath.endsWith(".svg") ? "image/svg+xml" : "image/png",
-              },
-            ]
-          : [{ rel: "icon", href: "/favicon.ico", type: "image/x-icon" }]),
+        // DB-uploaded favicon takes priority; /favicon.svg is the hardcoded fallback
+        {
+          rel: "icon",
+          href: m?.faviconPath ?? "/favicon.svg",
+          type: (m?.faviconPath ?? "/favicon.svg").endsWith(".svg")
+            ? "image/svg+xml"
+            : "image/png",
+        },
         { rel: "preconnect", href: "https://fonts.googleapis.com" },
         {
           rel: "preconnect",
