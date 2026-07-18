@@ -46,10 +46,24 @@ function LogoPage() {
           setMsg(null);
           setErr(null);
           try {
-            await createLogoFn({ data: fd });
+            const result = await createLogoFn({ data: fd });
             setMsg("Logo uploaded.");
+            form.reset(); // reset before invalidate — invalidate may unmount the form
+            // Immediately update the browser favicon without requiring a full reload
+            if (variant === "favicon" && result?.path) {
+              const link = document.querySelector<HTMLLinkElement>('link[rel="icon"]');
+              if (link) {
+                link.href = result.path;
+                link.type = result.path.endsWith(".svg") ? "image/svg+xml" : "image/png";
+              } else {
+                const newLink = document.createElement("link");
+                newLink.rel = "icon";
+                newLink.href = result.path;
+                newLink.type = result.path.endsWith(".svg") ? "image/svg+xml" : "image/png";
+                document.head.appendChild(newLink);
+              }
+            }
             await router.invalidate();
-            form.reset();
           } catch (ex) {
             setErr(ex instanceof Error ? ex.message : "Upload failed");
           }
