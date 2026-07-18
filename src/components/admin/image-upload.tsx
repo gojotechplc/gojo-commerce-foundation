@@ -6,9 +6,17 @@ type Props = {
   onUploaded: (path: string) => void;
   category?: string;
   label?: string;
+  /** Shown under the file input, e.g. recommended pixel size */
+  hint?: string;
 };
 
-export function ImageUpload({ value, onUploaded, category = "general", label }: Props) {
+export function ImageUpload({
+  value,
+  onUploaded,
+  category = "general",
+  label,
+  hint,
+}: Props) {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -47,6 +55,7 @@ export function ImageUpload({ value, onUploaded, category = "general", label }: 
         }}
         className="block w-full text-sm"
       />
+      {hint && <p className="text-xs text-muted-foreground">{hint}</p>}
       {busy && <div className="text-xs text-muted-foreground">Uploading…</div>}
       {error && <div className="text-xs text-destructive">{error}</div>}
     </div>

@@ -37,6 +37,14 @@ const SECTION_HINTS: Partial<Record<(typeof KEYS)[number], string>> = {
   promise_figure: "Text overlay on the hero image panel.",
 };
 
+/** Recommended upload sizes shown next to the file picker */
+const IMAGE_SIZE_HINTS: Partial<Record<(typeof KEYS)[number], string>> = {
+  hero: "Recommended: 2400 × 1350 px (16:9 landscape). Minimum 1920 × 1080. JPEG or WebP, under 2 MB.",
+  hub_spoke: "Recommended: 1200 × 900 px (4:3). JPEG or WebP, under 1 MB.",
+  mid_band: "Recommended: 2400 × 1000 px (wide band). Minimum 1920 × 800. JPEG or WebP, under 2 MB.",
+  work_with_us: "Recommended: 1200 × 900 px (4:3). JPEG or WebP, under 1 MB.",
+};
+
 const IMAGE_SECTIONS = new Set(["hero", "hub_spoke", "mid_band", "work_with_us"]);
 
 export const Route = createFileRoute("/admin/home")({
@@ -56,7 +64,13 @@ function HomeEditor() {
       />
       <div className="space-y-6">
         {KEYS.map((key) => (
-          <SectionForm key={key} sectionKey={key} initial={byKey[key]} hint={SECTION_HINTS[key]} />
+          <SectionForm
+            key={key}
+            sectionKey={key}
+            initial={byKey[key]}
+            hint={SECTION_HINTS[key]}
+            imageSizeHint={IMAGE_SIZE_HINTS[key]}
+          />
         ))}
       </div>
     </div>
@@ -67,9 +81,11 @@ function SectionForm({
   sectionKey,
   initial,
   hint,
+  imageSizeHint,
 }: {
   sectionKey: string;
   hint?: string;
+  imageSizeHint?: string;
   initial?: {
     eyebrow: string | null;
     heading: string | null;
@@ -186,6 +202,9 @@ function SectionForm({
                 }}
                 className="block w-full text-sm"
               />
+              {imageSizeHint && (
+                <p className="text-xs text-muted-foreground">{imageSizeHint}</p>
+              )}
               {imagePath && (
                 <button
                   type="button"

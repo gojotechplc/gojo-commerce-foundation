@@ -68,7 +68,7 @@ function PartnershipsAdmin() {
         <h2 className="font-display text-xl">Hero image</h2>
         <p className="text-xs text-muted-foreground">
           Real partnership / logistics photo beside the page headline. Prefer documentary shots over
-          stock handshakes.
+          stock handshakes. Recommended: 1600 × 1000 px (landscape). JPEG or WebP, under 1.5 MB.
         </p>
         {page?.heroImagePath ? (
           <img
@@ -277,6 +277,9 @@ function PartnershipsAdmin() {
                   }}
                 />
                 {p.logoPath && <img src={p.logoPath} alt="" className="h-10 object-contain" />}
+                <p className="text-xs text-muted-foreground">
+                  Recommended logo: 400 × 200 px PNG with transparent background, under 200 KB.
+                </p>
                 <div className="flex flex-wrap gap-3 text-xs items-center">
                   <label className="inline-flex items-center gap-1 cursor-pointer text-primary">
                     <span>{p.logoPath ? "Replace logo" : "Upload logo"}</span>

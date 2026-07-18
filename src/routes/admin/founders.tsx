@@ -104,7 +104,8 @@ function FoundersAdmin() {
                   await router.invalidate();
                 }}
               />
-              <div className="flex flex-wrap gap-3 text-xs items-center">
+              <div className="space-y-1">
+                <div className="flex flex-wrap gap-3 text-xs items-center">
                 <input
                   type="file"
                   accept="image/*"
@@ -161,6 +162,10 @@ function FoundersAdmin() {
                 >
                   Delete
                 </button>
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  Recommended photo: 600 × 600 px (square). JPEG or WebP, under 500 KB.
+                </p>
               </div>
             </div>
           );

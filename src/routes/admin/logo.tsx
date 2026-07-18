@@ -91,6 +91,9 @@ function LogoPage() {
         </Field>
         <Field label="File">
           <input name="file" type="file" accept="image/*" required />
+          <p className="mt-1 text-xs text-muted-foreground">
+            Primary/dark: SVG or PNG ~800 × 200 px. Favicon: 512 × 512 px. OG: 1200 × 630 px.
+          </p>
         </Field>
         <button
           type="submit"

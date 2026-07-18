@@ -211,6 +211,7 @@ function CapDetail() {
             label="Hero image (top of capability page)"
             path={heroPath}
             onFile={(f) => uploadSlot("hero", f)}
+            hint="Recommended: 1920 × 1080 px (16:9). JPEG or WebP, under 1.5 MB."
             onClear={async () => {
               await deleteCapabilityImageFn({ data: { id: cap.id, slot: "hero" } });
               setHeroPath(null);
@@ -221,6 +222,7 @@ function CapDetail() {
             label="Card image (optional — listings)"
             path={cardPath}
             onFile={(f) => uploadSlot("card", f)}
+            hint="Recommended: 1200 × 800 px. JPEG or WebP, under 1 MB."
             onClear={async () => {
               await deleteCapabilityImageFn({ data: { id: cap.id, slot: "card" } });
               setCardPath(null);
@@ -323,11 +325,13 @@ function ImageSlot({
   path,
   onFile,
   onClear,
+  hint = "Recommended: 1600 × 1000 px (landscape). JPEG or WebP, under 1.5 MB.",
 }: {
   label: string;
   path: string | null | undefined;
   onFile: (file: File) => Promise<void>;
   onClear: () => Promise<void>;
+  hint?: string;
 }) {
   const [busy, setBusy] = useState(false);
   return (
@@ -364,6 +368,7 @@ function ImageSlot({
           }
         }}
       />
+      {hint && <p className="text-xs text-muted-foreground">{hint}</p>}
       {busy && <div className="text-xs text-muted-foreground">Uploading…</div>}
     </div>
   );

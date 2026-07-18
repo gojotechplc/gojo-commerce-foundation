@@ -119,12 +119,14 @@ function MetaPage() {
             category="og"
             value={g.ogImagePath}
             onUploaded={(path) => setG({ ...g, ogImagePath: path })}
+            hint="Recommended: 1200 × 630 px (Open Graph). JPEG or PNG, under 1 MB."
           />
           <ImageUpload
             label="Twitter image"
             category="og"
             value={g.twitterImagePath}
             onUploaded={(path) => setG({ ...g, twitterImagePath: path })}
+            hint="Recommended: 1200 × 630 px. JPEG or PNG, under 1 MB."
           />
           <SaveButton pending={pending} />
         </form>

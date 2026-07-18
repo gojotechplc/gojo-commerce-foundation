@@ -130,6 +130,10 @@ function CompanyPage() {
           </Field>
           <Field label="Logo image (PNG, SVG, WebP, JPEG)">
             <input name="file" type="file" accept="image/*" required />
+            <p className="mt-1 text-xs text-muted-foreground">
+              Recommended: SVG or PNG with transparent background, about 800 × 200 px (wide logo)
+              or 512 × 512 px (square mark). Keep under 500 KB.
+            </p>
           </Field>
           <button
             type="submit"

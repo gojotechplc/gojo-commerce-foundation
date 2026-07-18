@@ -146,6 +146,9 @@ function GojoShopAdmin() {
                 ) : (
                   <div className="text-xs text-muted-foreground">No image yet</div>
                 )}
+                <p className="text-xs text-muted-foreground">
+                  Recommended: 1200 × 800 px. JPEG or WebP, under 1 MB.
+                </p>
                 <div className="flex flex-wrap gap-3 items-center text-xs">
                   <label className="inline-flex items-center gap-1 cursor-pointer text-primary">
                     <span>{w.imagePath ? "Replace image" : "Upload image"}</span>
@@ -249,7 +252,7 @@ function GojoShopAdmin() {
         <h2 className="font-display text-xl">Gallery</h2>
         <p className="text-xs text-muted-foreground">
           Public page shows 6 per page with a click-to-open lightbox. Upload, replace, or remove
-          images here.
+          images here. Recommended: 1600 × 1200 px (4:3). JPEG or WebP, under 1.5 MB each.
         </p>
         <SortableList
           items={gallery.map((g) => ({ id: g.id, label: g.title || g.imagePath }))}
@@ -391,6 +394,9 @@ function GojoShopAdmin() {
           </Field>
           <Field label="Image">
             <input name="file" type="file" accept="image/*" required />
+            <p className="mt-1 text-xs text-muted-foreground">
+              Recommended: 1600 × 1200 px (4:3). JPEG or WebP, under 1.5 MB.
+            </p>
           </Field>
           <button
             type="submit"
