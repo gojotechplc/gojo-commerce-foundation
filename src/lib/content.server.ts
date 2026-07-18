@@ -125,9 +125,16 @@ export async function loadSiteChrome(): Promise<SiteChromeData> {
 export async function loadGlobalMeta() {
   try {
     await ensureSeeded();
-    const meta = getDb().select().from(globalMeta).get();
+    const db = getDb();
+    const meta = db.select().from(globalMeta).get();
     if (!meta) throw new Error("missing meta");
-    return meta;
+    const activeFavicon = db
+      .select()
+      .from(logo)
+      .where(eq(logo.isActive, 1))
+      .all()
+      .find((l) => l.variant === "favicon") ?? null;
+    return { ...meta, faviconPath: activeFavicon?.filePath ?? null };
   } catch {
     const title =
       "Gojo Solutions PLC — Trust-driven commerce infrastructure in Ethiopia";
@@ -147,6 +154,7 @@ export async function loadGlobalMeta() {
       twitterTitle: title,
       twitterDescription: description,
       twitterImagePath: null as string | null,
+      faviconPath: null as string | null,
       updatedAt: new Date().toISOString(),
     };
   }
