@@ -48,39 +48,39 @@ function About() {
         </div>
       </section>
 
-      <section className="bg-secondary/60 border-y border-border/60 mt-12">
-        <div className="container-page py-20">
-          <div className="eyebrow rule-ochre">
-            {foundersHeader?.eyebrow ?? "Founders"}
+      {(!foundersHeader || foundersHeader.isVisible !== 0) && (
+        <section className="bg-secondary/60 border-y border-border/60 mt-12">
+          <div className="container-page py-20">
+            <div className="eyebrow rule-ochre">{foundersHeader?.eyebrow ?? "Founders"}</div>
+            <h2 className="mt-4 font-display text-3xl md:text-4xl max-w-2xl">
+              {foundersHeader?.heading ?? "Three founders. One operating philosophy."}
+            </h2>
+            <div className="mt-12 grid gap-6 md:grid-cols-3">
+              {founders.map((f) => (
+                <div key={f.id} className="rounded-md bg-card border border-border p-6">
+                  {f.photoPath ? (
+                    <img
+                      src={f.photoPath}
+                      alt={f.name}
+                      loading="lazy"
+                      className="h-16 w-16 rounded-full object-cover"
+                    />
+                  ) : (
+                    <div
+                      aria-hidden
+                      className="h-16 w-16 rounded-full bg-primary/10 grid place-items-center font-display text-xl text-primary"
+                    >
+                      {f.name.slice(0, 1)}
+                    </div>
+                  )}
+                  <div className="mt-4 font-display text-xl">{f.name}</div>
+                  <div className="mt-1 text-sm text-muted-foreground">{f.role}</div>
+                </div>
+              ))}
+            </div>
           </div>
-          <h2 className="mt-4 font-display text-3xl md:text-4xl max-w-2xl">
-            {foundersHeader?.heading ?? "Three founders. One operating philosophy."}
-          </h2>
-          <div className="mt-12 grid gap-6 md:grid-cols-3">
-            {founders.map((f) => (
-              <div key={f.id} className="rounded-md bg-card border border-border p-6">
-                {f.photoPath ? (
-                  <img
-                    src={f.photoPath}
-                    alt={f.name}
-                    loading="lazy"
-                    className="h-16 w-16 rounded-full object-cover"
-                  />
-                ) : (
-                  <div
-                    aria-hidden
-                    className="h-16 w-16 rounded-full bg-primary/10 grid place-items-center font-display text-xl text-primary"
-                  >
-                    {f.name.slice(0, 1)}
-                  </div>
-                )}
-                <div className="mt-4 font-display text-xl">{f.name}</div>
-                <div className="mt-1 text-sm text-muted-foreground">{f.role}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+        </section>
+      )}
     </PageShell>
   );
 }

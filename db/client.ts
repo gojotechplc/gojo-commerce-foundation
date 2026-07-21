@@ -179,6 +179,7 @@ CREATE TABLE IF NOT EXISTS home_sections (
   cta2_label TEXT,
   cta2_href TEXT,
   image_path TEXT,
+  is_visible INTEGER NOT NULL DEFAULT 1,
   updated_at TEXT NOT NULL DEFAULT (datetime('now'))
 );
 
@@ -447,6 +448,9 @@ function migrateHomeSectionsColumns(db: Database) {
   );
   if (!cols.has("image_path")) {
     db.exec(`ALTER TABLE home_sections ADD COLUMN image_path TEXT`);
+  }
+  if (!cols.has("is_visible")) {
+    db.exec(`ALTER TABLE home_sections ADD COLUMN is_visible INTEGER NOT NULL DEFAULT 1`);
   }
 }
 

@@ -88,6 +88,7 @@ export async function loadSiteChrome(): Promise<SiteChromeData> {
       footer: footer.map((n) => ({ label: n.label, href: n.href })),
       navCtaLabel: navCta?.ctaLabel ?? "Visit Gojo Shop →",
       navCtaHref: navCta?.ctaHref ?? company.shopUrl,
+      navCtaVisible: navCta ? navCta.isVisible !== 0 : true,
     };
   } catch {
     return {
@@ -118,6 +119,7 @@ export async function loadSiteChrome(): Promise<SiteChromeData> {
       ],
       navCtaLabel: "Visit Gojo Shop →",
       navCtaHref: fallbackCompany.shopUrl,
+      navCtaVisible: true,
     };
   }
 }

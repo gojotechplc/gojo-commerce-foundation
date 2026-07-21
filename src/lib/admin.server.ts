@@ -423,6 +423,7 @@ export const updateHomeSectionFn = createServerFn({ method: "POST" })
       cta2Label?: string | null;
       cta2Href?: string | null;
       imagePath?: string | null;
+      isVisible?: number;
     }) => d,
   )
   .handler(async ({ data }) => {

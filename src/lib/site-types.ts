@@ -13,4 +13,5 @@ export type SiteChromeData = {
   footer: { label: string; href: string }[];
   navCtaLabel: string;
   navCtaHref: string;
+  navCtaVisible?: boolean;
 };

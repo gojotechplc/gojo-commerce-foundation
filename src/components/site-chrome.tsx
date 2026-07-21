@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import type { SiteChromeData } from "@/lib/site-types";
 
 export function SiteHeader({ chrome }: { chrome: SiteChromeData }) {
-  const { company, logo, nav, navCtaLabel, navCtaHref } = chrome;
+  const { company, logo, nav, navCtaLabel, navCtaHref, navCtaVisible = true } = chrome;
   const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
@@ -71,14 +71,16 @@ export function SiteHeader({ chrome }: { chrome: SiteChromeData }) {
         </nav>
 
         <div className="flex items-center gap-2 shrink-0">
-          <a
-            href={navCtaHref || company.shopUrl}
-            target="_blank"
-            rel="noreferrer"
-            className="hidden sm:inline-flex items-center gap-1.5 rounded-sm bg-primary px-3 py-2 text-xs font-medium text-primary-foreground hover:bg-forest transition-colors"
-          >
-            {navCtaLabel}
-          </a>
+          {navCtaVisible && (
+            <a
+              href={navCtaHref || company.shopUrl}
+              target="_blank"
+              rel="noreferrer"
+              className="hidden sm:inline-flex items-center gap-1.5 rounded-sm bg-primary px-3 py-2 text-xs font-medium text-primary-foreground hover:bg-forest transition-colors"
+            >
+              {navCtaLabel}
+            </a>
+          )}
           <button
             type="button"
             className="lg:hidden inline-flex h-10 w-10 items-center justify-center rounded-sm border border-border text-foreground hover:bg-muted"
@@ -135,15 +137,17 @@ export function SiteHeader({ chrome }: { chrome: SiteChromeData }) {
                 {n.label}
               </Link>
             ))}
-            <a
-              href={navCtaHref || company.shopUrl}
-              target="_blank"
-              rel="noreferrer"
-              className="mt-2 flex w-full items-center justify-center rounded-sm bg-primary px-4 py-3 text-sm font-medium text-primary-foreground"
-              onClick={() => setMenuOpen(false)}
-            >
-              {navCtaLabel}
-            </a>
+            {navCtaVisible && (
+              <a
+                href={navCtaHref || company.shopUrl}
+                target="_blank"
+                rel="noreferrer"
+                className="mt-2 flex w-full items-center justify-center rounded-sm bg-primary px-4 py-3 text-sm font-medium text-primary-foreground"
+                onClick={() => setMenuOpen(false)}
+              >
+                {navCtaLabel}
+              </a>
+            )}
           </div>
         </nav>
       </div>

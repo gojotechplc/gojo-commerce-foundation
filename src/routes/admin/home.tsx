@@ -35,6 +35,10 @@ const SECTION_HINTS: Partial<Record<(typeof KEYS)[number], string>> = {
   mid_band: "Full-width photo band between Structure and the Gojo Promise.",
   work_with_us: "Optional image beside the final CTA block.",
   promise_figure: "Text overlay on the hero image panel.",
+  nav_cta: "Header “Visit Gojo Shop” button sitewide. Hide to remove it from the nav.",
+  about_founders_header: "Founders block heading on the About page (not the home page).",
+  audiences_section: "Three audience columns on the home page.",
+  capabilities_grid: "Capability cards grid near the bottom of the home page.",
 };
 
 /** Recommended upload sizes shown next to the file picker */
@@ -60,7 +64,7 @@ function HomeEditor() {
     <div>
       <AdminPageHeader
         title="Home page"
-        description="Edit home sections. Upload photos on hero, mid_band, hub_spoke, or work_with_us."
+        description="Edit home sections. Toggle Visible / Hidden on each row. Upload photos on hero, mid_band, hub_spoke, or work_with_us."
       />
       <div className="space-y-6">
         {KEYS.map((key) => (
@@ -95,6 +99,7 @@ function SectionForm({
     cta2Label: string | null;
     cta2Href: string | null;
     imagePath: string | null;
+    isVisible?: number | null;
   };
 }) {
   const router = useRouter();
@@ -109,21 +114,65 @@ function SectionForm({
     cta2Href: initial?.cta2Href ?? "",
   });
   const [imagePath, setImagePath] = useState(initial?.imagePath ?? null);
+  const [visible, setVisible] = useState(initial?.isVisible !== 0);
   const [msg, setMsg] = useState<string | null>(null);
   const [err, setErr] = useState<string | null>(null);
   const [pending, setPending] = useState(false);
   const [imgPending, setImgPending] = useState(false);
+  const [visPending, setVisPending] = useState(false);
   const canHaveImage = IMAGE_SECTIONS.has(sectionKey);
 
+  const toggleVisible = async () => {
+    const next = !visible;
+    setVisPending(true);
+    setMsg(null);
+    setErr(null);
+    try {
+      await updateHomeSectionFn({
+        data: { sectionKey, isVisible: next ? 1 : 0 },
+      });
+      setVisible(next);
+      setMsg(next ? "Section is now visible." : "Section is now hidden.");
+      await router.invalidate();
+    } catch (ex) {
+      setErr(ex instanceof Error ? ex.message : "Failed to update visibility");
+    } finally {
+      setVisPending(false);
+    }
+  };
+
   return (
-    <div className="rounded-md border border-border">
-      <button
-        type="button"
-        className="w-full text-left px-4 py-3 font-display text-lg hover:bg-muted/40"
-        onClick={() => setOpen(!open)}
-      >
-        {sectionKey} {open ? "▾" : "▸"}
-      </button>
+    <div
+      className={`rounded-md border ${
+        visible ? "border-border" : "border-border/70 bg-muted/20 opacity-90"
+      }`}
+    >
+      <div className="flex items-center gap-2 px-2 sm:px-3">
+        <button
+          type="button"
+          className="flex-1 min-w-0 text-left px-2 py-3 font-display text-lg hover:bg-muted/40 rounded-sm"
+          onClick={() => setOpen(!open)}
+        >
+          <span className="truncate">{sectionKey}</span>{" "}
+          <span className="text-muted-foreground font-sans text-sm">{open ? "▾" : "▸"}</span>
+        </button>
+        <button
+          type="button"
+          disabled={visPending}
+          onClick={(e) => {
+            e.stopPropagation();
+            void toggleVisible();
+          }}
+          className={`shrink-0 rounded-sm px-3 py-1.5 text-xs font-medium border transition-colors disabled:opacity-60 ${
+            visible
+              ? "border-primary/30 bg-primary/10 text-primary hover:bg-primary/15"
+              : "border-border bg-background text-muted-foreground hover:bg-muted"
+          }`}
+          aria-pressed={visible}
+        >
+          {visPending ? "…" : visible ? "Visible" : "Hidden"}
+        </button>
+      </div>
       {open && (
         <form
           className="border-t border-border p-4 space-y-3"
@@ -143,6 +192,7 @@ function SectionForm({
                   ctaHref: form.ctaHref || null,
                   cta2Label: form.cta2Label || null,
                   cta2Href: form.cta2Href || null,
+                  isVisible: visible ? 1 : 0,
                 },
               });
               setMsg("Saved.");

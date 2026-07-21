@@ -164,6 +164,7 @@ export const homeSections = sqliteTable("home_sections", {
   cta2Label: text("cta2_label"),
   cta2Href: text("cta2_href"),
   imagePath: text("image_path"),
+  isVisible: integer("is_visible").notNull().default(1),
   updatedAt: text("updated_at").notNull().$defaultFn(now),
 });
 
